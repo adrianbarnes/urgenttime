@@ -3,29 +3,16 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="flex">
-      <nav className="flex-auto w-32 justify-between p-4">
-        <div className="flex items-center">
-
-          <Link href="#">
-            <Image src="/logo.svg" alt="Urgenttime Logo"
-              className="h-8 mr-4"
-              width={163}
-              height={31}
-            />
-          </Link>
-        </div>
-      </nav>
-      <main className="flex-auto w-64 min-h-screen justify-end">
-        <div className="flex bg-white h-screen rounded-lg shadow-xl shadow-blue items-center w-full">
-          <div className="md:w-9/12 ml-auto bg-white md:mt-0 xl:p-0">
+    <main className="flex min-h-screen justify-end -mt-14 ml-10">
+        <div className="flex h-screen bg-white rounded-lg shadow-xl shadow-blue items-center md:w-7/12">
+          <div className="md:w-10/12 ml-auto md:mt-0 xl:p-0">
             <div className="p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl mb-5 font-bold leading-tight tracking-tight text-gray-700 md:text-2xl text-dark-blue">
                 Create Account
               </h1>
               <form className="space-y-5 md:space-y-6" action="#">
-
-                <div className="w-full">
+                <div className="flex gap-4">
+                 <div className="w-full">
                   <div className="relative w-full min-w-[200px] h-10">
                     <input
                       className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
@@ -45,6 +32,8 @@ export default function Page() {
                       Lastname
                     </label>
                   </div>
+                </div>
+
                 </div>
 
                 <div className="w-full">
@@ -85,7 +74,7 @@ export default function Page() {
                   </p>
                 </div>
                 <div className="flex items-center justify-center">
-                  <button className="w-full px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
+                  <button className="w-3/5 px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
                     <Image className="w-6 h-6"
                       src="/google-logo.svg"
                       loading="lazy" alt="google logo"
@@ -99,7 +88,6 @@ export default function Page() {
             </div>
           </div>
         </div>
-      </main>
-    </div>
+    </main>
   );
 }
