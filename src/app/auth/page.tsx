@@ -4,9 +4,7 @@ import Link from "next/link";
 export default function Page() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
-      <div className="z-10 w-full max-w-5xl items-center justify-between text-sm lg:flex">
         <div className="flex flex-col w-6/12 items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-
           <div className="w-full bg-white rounded-lg shadow-xl shadow-blue md:mt-0 sm:max-w-md xl:p-0">
             <div className="w-8/12 p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl mb-5 font-bold leading-tight tracking-tight text-gray-700 md:text-2xl text-dark-blue">
@@ -63,7 +61,6 @@ export default function Page() {
             </div>
           </div>
         </div>
-      </div>
     </main>
   );
 }

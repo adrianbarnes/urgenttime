@@ -20,11 +20,6 @@ export default function AuthLayout({
             </a>
           </div>
         </div>
-        {/* <div className="flex items-center">
-        <a>
-          <img src="/avatar.png" alt="User Avatar" className="h-8 w-8 rounded-full" />
-        </a>
-    </div> */}
       </nav>
       {children}
     </div>

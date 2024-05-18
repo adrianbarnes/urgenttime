@@ -37,4 +37,22 @@ body {
   .bg-dark-blue {
     background-color: rgba(36, 71, 122, 1)
   }  
+
+  .bg-forest-green {
+    background-color: rgba(36, 122, 44, 1)
+  }  
+  
+  input.iti__tel-input {
+    width: 100%;
+   }  
+
+   .iti {
+    width: 100%;
+   }
+}
+
+@layer components {
+  input.iti__tel-input {
+    width: 100%;
+   } 
 }
