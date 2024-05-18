@@ -49,7 +49,7 @@ export async function signup(state: FormState, formData: FormData) {
     //   }
     // }
 
-    await createSession(user.id)
+    await createSession(user.id, user.email)
     redirect('/call')    
   }
   

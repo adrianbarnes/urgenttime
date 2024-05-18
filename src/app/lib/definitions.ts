@@ -47,8 +47,7 @@ export type FormState =
   export interface SessionPayload {
     // Define the properties and their types required for the SessionPayload
     userId: string;
+    username: string;
     [key: string]: string | number;
-    //expiresAt: Date,
-    
-    // Add other properties as per your requirements
+
   }
