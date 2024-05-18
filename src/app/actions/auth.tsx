@@ -1,3 +1,4 @@
+'use server'
 
 import { redirect } from "next/navigation";
 import { FormState, SignupFormSchema } from "../lib/definitions";
@@ -54,6 +55,7 @@ export async function signup(state: FormState, formData: FormData) {
     //   }
     // }
 
-    //await createSession(user.id)
+    await createSession(user.id)
     redirect('/call')    
   }
+  
