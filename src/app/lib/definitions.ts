@@ -21,6 +21,16 @@ lastName: z
     .trim(),
 })
  
+export const LoginFormSchema = z.object({
+   
+    email: z.string().min(1, { message: 'Enter a valid username' }).trim(),
+    password: z
+      .string()
+      .min(1, { message: 'Please enter a valid password.' })
+      .trim(),
+  })
+
+
 export type FormState =
   | {
       errors?: {
