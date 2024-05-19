@@ -4,8 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useFormState, useFormStatus } from 'react-dom';
 import { login } from "@/app/actions/auth";
+import { signIn } from "next-auth/react";
 
-export default function Page() {
+export default function LoginPage() {
   const [state, action] = useFormState(login, undefined)
 
   const { pending } = useFormStatus();
@@ -57,6 +58,7 @@ export default function Page() {
 
                 <button type="submit" className="w-full text-white bg-dark-blue hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
 
+              </form>
                 <div
                   className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
                   <p
@@ -65,20 +67,19 @@ export default function Page() {
                   </p>
                 </div>
                 <div className="flex items-center justify-center">
-                  <button className="w-full px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
+                  <button aria-disabled={pending} onClick={() => signIn("google")} className="w-full px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
                     <Image className="w-6 h-6"
                       src="/google-logo.svg"
                       loading="lazy" alt="google logo"
                       width={10}
                       height={31}
                     />
-                    <span>Login with Google</span>
+                    <span>{pending ? 'Logging in...' : 'Login with Google' }</span>
                   </button>
                 </div>
                 <p className="text-sm font-light text-center text-gray-500">
                   Are you new? <Link href="/auth/register" className="text-primary-600 text-dark-blue underline hover:underline">Create an account</Link>
                 </p>
-              </form>
             </div>
           </div>
         </div>

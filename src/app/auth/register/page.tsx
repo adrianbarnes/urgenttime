@@ -1,6 +1,7 @@
 'use client'
  
 import { signup } from '@/app/actions/signup'
+import { signIn } from 'next-auth/react';
 
 import Image from "next/image";
 import Link from "next/link";
@@ -126,6 +127,8 @@ export default function SignupPage() {
                   {pending ? 'Submitting...' : 'Create Account' }
                 </button>
 
+              </form>
+
                 <p className="text-sm font-light text-gray-500">
                   Already have an account? <Link href="/auth" className="text-primary-600 text-dark-blue underline hover:underline">Login</Link>
                 </p>
@@ -138,17 +141,16 @@ export default function SignupPage() {
                   </p>
                 </div>
                 <div className="flex items-center justify-center">
-                  <button className="w-3/5 px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
+                  <button aria-disabled={pending} onClick={() => signIn("google")} className="w-3/5 px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
                     <Image className="w-6 h-6"
                       src="/google-logo.svg"
                       loading="lazy" alt="google logo"
                       width={10}
                       height={31}
                     />
-                    <span>Login with Google</span>
+                    <span> {pending ? 'Logging in...' : 'Login with Google' }</span>
                   </button>
                 </div>
-              </form>
             </div>
           </div>
         </div>

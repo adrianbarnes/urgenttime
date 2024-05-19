@@ -30,24 +30,6 @@ export async function signup(state: FormState, formData: FormData) {
         password
 
     }
-   
-    //3. Insert the user into the database or call an Auth Library's API
-    // const data = await db
-    //   .insert(users)
-    //   .values({
-    //     firstName,
-    //     lastName,
-    //     email,
-    //   })
-    //   .returning({ id: users.id })
-   
-    // const user = data[0]
-   
-    // if (!user) {
-    //   return {
-    //     message: 'An error occurred while creating your account.',
-    //   }
-    // }
 
     await createSession(user.id, user.email)
     redirect('/call')    
