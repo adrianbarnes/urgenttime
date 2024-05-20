@@ -30,6 +30,16 @@ export const LoginFormSchema = z.object({
       .trim(),
   })
 
+  export const LaunchCallFormSchema = z.object({
+   
+    email: z.string().email({ message: 'Enter a valid email' }).trim(),
+    // phoneNumber: z
+    //   .string()
+    //   .min(8, { message: 'Phone number is too short.' })
+    //   .regex(/^\+[1-9]\d{1,14}$/, { message: 'Please enter a valid phone number.' })
+    //   .trim(),
+  })  
+
 
 export type FormState =
   | {
@@ -42,12 +52,3 @@ export type FormState =
       message?: string
     }
   | undefined
-
-
-  export interface SessionPayload {
-    // Define the properties and their types required for the SessionPayload
-    userId: string;
-    username: string;
-    [key: string]: string | number;
-
-  }

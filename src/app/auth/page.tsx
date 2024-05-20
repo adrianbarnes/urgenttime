@@ -56,7 +56,9 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                <button type="submit" className="w-full text-white bg-dark-blue hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sign in</button>
+                <button aria-disabled={pending} type="submit"
+                  className="w-full text-white bg-dark-blue hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                  {pending ? 'Submitting...' : 'Sign in'} </button>
 
               </form>
                 <div
@@ -67,14 +69,14 @@ export default function LoginPage() {
                   </p>
                 </div>
                 <div className="flex items-center justify-center">
-                  <button aria-disabled={pending} onClick={() => signIn("google")} className="w-full px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
+                  <button onClick={() => signIn("google")} className="w-full px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
                     <Image className="w-6 h-6"
                       src="/google-logo.svg"
                       loading="lazy" alt="google logo"
                       width={10}
                       height={31}
                     />
-                    <span>{pending ? 'Logging in...' : 'Login with Google' }</span>
+                    <span>Login with Google</span>
                   </button>
                 </div>
                 <p className="text-sm font-light text-center text-gray-500">
