@@ -5,6 +5,8 @@ import 'intl-tel-input/build/css/intlTelInput.css';
 import React, { useState, useRef, useEffect } from 'react';
 import { launchCall } from "../actions/launchCall";
 import { useFormState, useFormStatus } from "react-dom";
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 
 
 export default function CallPage() {
@@ -15,7 +17,24 @@ export default function CallPage() {
   const [phoneNumber, setNumber, ] = useState('');
   const phoneInputRef = useRef(null);
 
+  useEffect(() => {
+    if (state?.success) {
+      toast.success(state.success, {
+        position: "top-right",
+        // other options
+      });
+
+      //redirect('/call')   
+    } else if (state?.error) {
+      toast.error(state.error, {
+        position: "top-right",
+        // other options
+      });
+    }
+  }, [state?.success, state?.error]);  
+
   return (
+    
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="container mx-auto mt-14">
         <div className="flex w-full ">
@@ -56,7 +75,6 @@ export default function CallPage() {
                     {state?.errors?.email && <p className='text-sm text-red-500'>{state.errors.email}</p>}
                   </div>
                 </div>
-
                 
                 <p
                     className="my-4 text-center text-sm text-dark-blue font-light">

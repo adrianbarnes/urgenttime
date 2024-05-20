@@ -1,6 +1,5 @@
 'use server'
 
-import { redirect } from "next/navigation";
 import { FormState, LaunchCallFormSchema} from "../lib/definitions";
 import { sendMail } from "../lib/emailer";
 import { render } from "@react-email/components";
@@ -34,9 +33,14 @@ export async function launchCall(state: FormState, formData: FormData) {
         pretty: true,
     })
 
-    sendMail('from', email, 'Invitation to Join Call', html, "");
+    try {
+        await sendMail('from', email, 'Invitation to Join Call', html, "");
+    
+        return { success: 'Mail sent successfully' };
+      } catch (error) {
+        return { error: 'Failed to send mail' };
+      }
    
-
-    //redirect('/call')    
+     
   }
   
