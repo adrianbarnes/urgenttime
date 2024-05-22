@@ -24,13 +24,18 @@ export async function sendMail(from: string | undefined, to: string, subject: st
             html: html,
           };
 
-        await transporter.sendMail(mailOptions, (error, info) => {
+        await new Promise((resolve, reject) => {
+
+        transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
+                reject(error)
             } else {
                 console.log('Email sent: ' + info.response);
+                resolve(true)
             }
-        });          
+        });   
+    })       
     //   return payload
     } catch (error) {
       console.log('Failed to send email')
