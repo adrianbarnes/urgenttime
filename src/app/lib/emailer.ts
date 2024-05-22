@@ -24,7 +24,7 @@ export async function sendMail(from: string | undefined, to: string, subject: st
             html: html,
           };
 
-        transporter.sendMail(mailOptions, (error, info) => {
+        await transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
             } else {
