@@ -7,12 +7,11 @@ import { launchCall } from "../actions/launchCall";
 import { useFormState, useFormStatus } from "react-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from "react-toastify";
+import SubmitButton from "@/app/lib/submit";
 
 
 export default function CallPage() {
   const [state, action] = useFormState(launchCall, undefined)
-
-  const { pending } = useFormStatus();
 
   const [phoneNumber, setNumber, ] = useState('');
   const phoneInputRef = useRef(null);
@@ -81,10 +80,12 @@ export default function CallPage() {
                     Use phone number
                   </p>  
                             
-                <button aria-disabled={pending}
-                  type="submit"
-                  className="w-full text-white bg-forest-green hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                  {pending ? 'Starting Call...' : 'Launch Call'}</button>
+                <SubmitButton
+                  className="w-full text-white bg-forest-green hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  pendingText="Starting Call..."
+                  launchText="Launch Call"
+                  >
+                </SubmitButton>
               </form>
               </div>
           </div>

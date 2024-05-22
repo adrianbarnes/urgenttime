@@ -1,6 +1,7 @@
 'use client'
  
 import { signup } from '@/app/actions/signup'
+import SubmitButton from '@/app/lib/submit';
 import { signIn } from 'next-auth/react';
 
 import Image from "next/image";
@@ -9,8 +10,6 @@ import { useFormState, useFormStatus } from 'react-dom';
 
 export default function SignupPage() {
   const [state, action] = useFormState(signup, undefined)
-
-  const { pending } = useFormStatus();
   
   return (
     <main className="flex min-h-screen justify-end -mt-14 ml-10">
@@ -122,10 +121,12 @@ export default function SignupPage() {
                   </div>
                 </div>
 
-                <button aria-disabled={pending} type="submit"
-                className="w-full text-white bg-dark-blue hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                  {pending ? 'Submitting...' : 'Create Account' }
-                </button>
+                <SubmitButton
+                  className="w-full text-white bg-dark-blue hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  pendingText="Creating..."
+                  launchText="'Create Account"
+                  >
+                </SubmitButton>
 
               </form>
 
