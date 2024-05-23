@@ -2,11 +2,16 @@
 import Peer from 'peerjs';
 import React, { useEffect, useRef, useState } from 'react';
 
-const LegBPeer = ({ peerInstance, idToCall }: { peerInstance: Peer | null, idToCall: string }) => {
+const LegBPeer = ({ peerInstance, idToCall, incomingStream }: { peerInstance: Peer | null, idToCall: string, incomingStream: any }) => {
   const callingVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    console.log("loaded LegB")
+    console.log("callId "+ idToCall);
+    console.log("peer instance "+ peerInstance);
+
     if (peerInstance && idToCall) {
+        console.log("starting call");
       // Code for handling call and retrieving video stream
       const handleCall = () => {
         navigator.mediaDevices.getUserMedia({
@@ -23,9 +28,17 @@ const LegBPeer = ({ peerInstance, idToCall }: { peerInstance: Peer | null, idToC
           }
         });
       };
+      console.log("Leg B working");
       
       handleCall();
     }
+
+
+    if (incomingStream && callingVideoRef.current) {
+        console.log("Receiving Stream from A");
+        callingVideoRef.current.srcObject = incomingStream;
+      }
+
   }, [peerInstance, idToCall]);
 
   return (
