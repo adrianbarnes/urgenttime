@@ -35,11 +35,7 @@ const PeerPage = () => {
     if(myUniqueId){
         let peer: Peer;
         if (typeof window !== 'undefined') {
-          peer = new Peer(myUniqueId, {
-            // host: 'localhost',
-            // port: 9000,
-            // path: '/myapp',
-          });
+          peer = new Peer(myUniqueId, {});
 
           setPeerInstance(peer);
     
@@ -76,10 +72,10 @@ const PeerPage = () => {
   return (
     <div className='flex flex-col justify-center items-center p-12'>
       <p>your id : {myUniqueId}</p>
-      <video className='w-72' playsInline ref={myVideoRef} autoPlay />
+      <video className='w-72' playsInline ref={myVideoRef} autoPlay muted/>
       <input className='text-black' placeholder="Id to call" value={idToCall} onChange={e => setIdToCall(e.target.value)} />
       <button onClick={handleCall}>call</button>
-      <video className='w-72' playsInline ref={callingVideoRef} autoPlay/>
+      <video className='w-72' playsInline ref={callingVideoRef} autoPlay muted/>
     </div>
   );
 };

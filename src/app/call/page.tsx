@@ -85,8 +85,7 @@ export default function CallPage() {
                   className="w-full text-white bg-forest-green hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                   pendingText="Starting Call..."
                   launchText="Launch Call"
-                  >
-                </SubmitButton>
+                  />
               </form>
               </div>
           </div>
