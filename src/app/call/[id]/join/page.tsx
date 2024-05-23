@@ -1,6 +1,7 @@
 'use client'
 
 import VideoCall from '@/app/components/videocall';
+import PeerPage from '@/app/peer/peer';
 import { useSearchParams } from 'next/navigation';
 
 
@@ -16,7 +17,9 @@ export default function JoinPage({ params }: { params: { id: string } }) {
       <div className="container mx-auto mt-14">
         <div className="flex w-full ">
           <div className="w-3/5 bg-white">
-              <VideoCall roomId={params.id} isCaller={isCaller}></VideoCall>
+              {/* <VideoCall roomId={params.id} isCaller={isCaller}></VideoCall> */}
+
+              <PeerPage></PeerPage>
           </div>
           <div className="w-2/5 bg-dark-blue"></div>
         </div>
