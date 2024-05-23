@@ -36,7 +36,7 @@ export async function launchCall(state: FormState, formData: FormData) {
     try {
         await sendMail('from', email, 'Invitation to Join Call', html, "");
     
-        return { success: 'Mail sent successfully' };
+        return { success: 'Mail sent successfully', inviteLink: inviteLink };
       } catch (error) {
         return { error: 'Failed to send mail' };
       }

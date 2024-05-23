@@ -11,9 +11,9 @@ export const generateRandomString = (length: number) => {
 
   export const generateInviteLink = () =>{
     let baseUrl = process.env.APP_URL;
-    let link =  baseUrl + "/join";
+    let link =  baseUrl + "/call";
 
-    link+= `/${generateRandomString(10)}`;
+    link+= `/${generateRandomString(10)}/join`;
 
 
     return link;
