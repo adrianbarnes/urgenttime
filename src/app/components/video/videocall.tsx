@@ -24,16 +24,22 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, isCaller }) => {
   useEffect(() => {
     // ... (code for generating unique ID remains unchanged)
     //setMyUniqueId(generateRandomString);
-    setMyUniqueId(roomId);
+    if(!isCaller){
+     setMyUniqueId(generateRandomString);
+    }
+
+    if(isCaller){
+        setMyUniqueId(roomId); 
+    }
   }, []);
 
   useEffect(() => {
         console.log("is caller "+ isCaller)
             
-        // if(myUniqueId && !isCaller){
+        if(!isCaller){
         //     console.log("setting call id ")
-            setIdToCall(myUniqueId)
-        //}       
+            setIdToCall(roomId)
+        }       
 
         if(myUniqueId){
             let peer: Peer;
