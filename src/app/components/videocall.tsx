@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPeerConnection, createCall, joinCall } from '@/app/lib/webrtc';
 import VideoStream from '@/app/components/videostream';
-
+import { firestore } from '../lib/firebase';
 
 interface VideoCallProps {
   roomId: string;
@@ -19,13 +19,19 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, isCaller }) => {
       setLocalStream(stream);
 
       if (isCaller) {
+        console.log("starting call");
         await createCall(roomId, "9456"/* callee ID */);
+
         const offer = await peerConnection.current!.createOffer();
         await peerConnection.current!.setLocalDescription(offer);
         // Send offer to callee through Firestore
+        handleOffer(offer); // New function for offer exchange
       } else {
         await joinCall(roomId);
-        // Handle offer received from caller
+        console.log("joining calling");
+        // Handle offer received from caller (implemented later)
+        listenForOffer();
+        listenForIceCandidates();        
       }
     };
 
@@ -38,6 +44,55 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, isCaller }) => {
     };
   }, [roomId, isCaller]);
 
+  // Function to handle and send Offer (Caller only)
+  const handleOffer = async (offer: RTCSessionDescriptionInit) => {
+    // Send offer to callee through Firestore (implementation depends on your firestore setup)
+    await firestore.collection('video-calls').doc(roomId).update({ offer });
+  };
+
+  // Function to handle and send Answer (Callee only)
+  const handleAnswer = async (answer: RTCSessionDescriptionInit) => {
+    // Send answer to caller through Firestore (implementation depends on your firestore setup)
+    await firestore.collection('video-calls').doc(roomId).update({ answer });
+  };
+
+// Send ICE Candidate
+const sendIceCandidate = async (candidate: RTCIceCandidate) => {
+    await firestore.collection('video-calls').doc(roomId).collection('iceCandidates').add(candidate);
+  };
+  
+  // Listen for Offer (Callee)
+  const listenForOffer = () => {
+    firestore.collection('video-calls').doc(roomId).onSnapshot((snapshot) => {
+      const data = snapshot.data();
+      if (data?.offer) {
+        createOfferAnswer(data.offer); // Process received offer
+      }
+    });
+  };
+  
+  // Listen for Answer (Caller)
+  const listenForAnswer = () => {
+    firestore.collection('video-calls').doc(roomId).onSnapshot((snapshot) => {
+      const data = snapshot.data();
+      if (data?.answer) {
+        createOfferAnswer(data.answer); // Process received answer
+      }
+    });
+  };
+  
+  // Listen for ICE Candidates (Both Caller and Callee)
+  const listenForIceCandidates = () => {
+    firestore.collection('video-calls').doc(roomId).collection('iceCandidates').onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added') {
+          const candidate = change.doc.data() as RTCIceCandidate;
+          handleIceCandidate(candidate); // Process received ICE candidate
+        }
+      });
+    });
+  };  
+
   // Function to create and set offer/answer based on received data
   const createOfferAnswer = async (sdp?: RTCSessionDescriptionInit) => {
     if (sdp) {
@@ -45,12 +100,12 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, isCaller }) => {
       if (!isCaller) {
         const answer = await peerConnection.current!.createAnswer();
         await peerConnection.current!.setLocalDescription(answer);
-        // Send answer to caller through Firestore
+        handleAnswer(answer); // Send answer to caller
       }
     } else {
       const offer = await peerConnection.current!.createOffer();
       await peerConnection.current!.setLocalDescription(offer);
-      // Send offer to callee through Firestore (if caller)
+      handleOffer(offer); // Send offer to callee (if caller)
     }
   };
 
@@ -64,7 +119,8 @@ const VideoCall: React.FC<VideoCallProps> = ({ roomId, isCaller }) => {
 
     peerConnection.current!.onicecandidate = (event) => {
       if (event.candidate) {
-        // Send ICE candidate to other party through Firestore
+        // Send ICE candidate to other party through Firestore (implementation depends on your firestore setup)
+        handleIceCandidate(event.candidate); // New function for ICE candidate exchange
       }
     };
 

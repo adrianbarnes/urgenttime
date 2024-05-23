@@ -1,5 +1,4 @@
-//import { RTCPeerConnection, RTCIceCandidate, RTCSessionDescription } from 'webrtc';
-import { firestore } from '@/app/lib/firebase'; // Assuming your Firebase initialization
+import { firestore } from '@/app/lib/firebase';
 
 const configuration = {
   iceServers: [
