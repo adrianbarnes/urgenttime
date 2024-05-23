@@ -7,7 +7,7 @@ import { launchCall } from "../actions/launchCall";
 import { useFormState, useFormStatus } from "react-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from "react-toastify";
-import SubmitButton from "@/app/lib/submit";
+import SubmitButton from "@/app/components/submit";
 import { redirect } from "next/navigation";
 
 
@@ -24,7 +24,7 @@ export default function CallPage() {
         // other options
       });
 
-      redirect(state?.inviteLink)   
+      redirect(state?.inviteLink +"?is_caller=true")   
     } else if (state?.error) {
       toast.error(state.error, {
         position: "top-right",

@@ -1,6 +1,26 @@
 import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 
+
+// // Type definitions for your nodemailer configuration
+// interface NodemailerConfig {
+//     host: string;
+//     port: number;
+//     secure?: string;
+//     auth?: object;
+//   }
+  
+//   const nodemailerConfig: NodemailerConfig = {
+//     host: process.env.MAIL_HOST as string,
+//     port: parseInt(process.env.MAIL_PORT as string),
+//     // //secure: false,
+//     // auth: {
+
+//     //     user: process.env.MAIL_USERNAME,
+//     //     pass: process.env.MAIL_PASSWORD,
+//     // }
+//   };
+
 const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
     port: parseInt(process.env.MAIL_PORT as string),

@@ -1,7 +1,7 @@
 'use client'
  
 import { signup } from '@/app/actions/signup'
-import SubmitButton from '@/app/lib/submit';
+import SubmitButton from '@/app/components/submit';
 import { signIn } from 'next-auth/react';
 
 import Image from "next/image";

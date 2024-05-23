@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useFormState, useFormStatus } from 'react-dom';
 import { login } from "@/app/actions/auth";
 import { signIn } from "next-auth/react";
-import SubmitButton from "@/app/lib/submit";
+import SubmitButton from "@/app/components/submit";
 
 export default function LoginPage() {
   const [state, action] = useFormState(login, undefined)
