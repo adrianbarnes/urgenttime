@@ -12,9 +12,9 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
-        <div className="flex flex-col w-6/12 items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div className="flex flex-col lg:w-6/12 w-11/12 items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <div className="w-full bg-white rounded-lg shadow-xl shadow-blue md:mt-0 sm:max-w-md xl:p-0">
-            <div className="w-8/12 p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
+            <div className="lg:w-8/12 p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl mb-5 font-bold leading-tight tracking-tight text-gray-700 md:text-2xl text-dark-blue">
                 Welcome Back
               </h1>
@@ -59,8 +59,7 @@ export default function LoginPage() {
                   className="w-full text-white bg-dark-blue hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                   pendingText="Logging in..."
                   launchText="Sign in"
-                  >
-                </SubmitButton>
+                  />
               </form>
                 <div
                   className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">

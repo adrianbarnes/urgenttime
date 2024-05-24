@@ -12,16 +12,16 @@ export default function JoinPage({ params }: { params: { id: string } }) {
 
   return (
     
-    <main className="flex min-h-screen flex-col items-center justify-between">
-      <div className="container mx-auto mt-14">
-        <div className="flex w-full ">
-          <div className="w-3/5 bg-white">
-
-              <VideoCall meetingId={params.id} isCaller={isCaller}/>
-          </div>
-          <div className="w-2/5 bg-dark-blue"></div>
+  <main className="flex min-h-screen flex-col items-center justify-between">
+    <div className="container mx-auto mt-14">
+      <div className="flex flex-col-reverse md:flex-row w-full ">
+        <div className="w-full md:w-3/5 bg-white">
+          <VideoCall meetingId={params.id} isCaller={isCaller}/>
         </div>
+        <div className="w-full md:w-2/5 bg-dark-blue"></div>
       </div>
-    </main>
+    </div>
+  </main>
+
   );
 }

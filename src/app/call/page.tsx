@@ -37,9 +37,9 @@ export default function CallPage() {
     
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="container mx-auto mt-14">
-        <div className="flex w-full ">
-          <div className="w-3/5 p-4 bg-white">
-            <div className="w-1/2 p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
+        <div className="flex w-full mx-auto">
+          <div className="w-full md:w-3/5 p-4 mx-auto bg-white">
+            <div className="md:w-1/2 w-full  p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl my-8 text-center font-bold leading-tight tracking-tight text-gray-700 md:text-2xl text-dark-blue">
                 Start a new call
               </h1>
@@ -89,7 +89,7 @@ export default function CallPage() {
               </form>
               </div>
           </div>
-          <div className="w-2/5 bg-dark-blue"></div>
+          <div className="hidden sm:block w-2/5 bg-dark-blue"></div>
         </div>
       </div>
     </main>

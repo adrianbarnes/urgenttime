@@ -12,15 +12,15 @@ export default function SignupPage() {
   const [state, action] = useFormState(signup, undefined)
   
   return (
-    <main className="flex min-h-screen justify-end -mt-14 ml-10">
-        <div className="flex h-screen bg-white rounded-lg shadow-xl shadow-blue items-center md:w-7/12">
-          <div className="md:w-10/12 ml-auto md:mt-0 xl:p-0">
+    <main className="flex min-h-screen flex-col items-center md:items-end md:justify-end md:-mt-14 md:ml-10 mt-5">
+        <div className="flex sm:flex-col md:w-7/12 w-11/12 md:h-screen bg-white rounded-lg shadow-xl shadow-blue items-center">
+          <div className="md:w-10/12 w-full md:ml-auto md:mt-0 xl:p-0">
             <div className="p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl mb-5 font-bold leading-tight tracking-tight text-gray-700 md:text-2xl text-dark-blue">
                 Create Account
               </h1>
               <form className="space-y-5 md:space-y-6" action={action}>
-                <div className="flex gap-4">
+                <div className="flex-1 md:flex md:gap-4 md:space-y-0 space-y-5">
                  <div className="w-full">
                   <div className="relative w-full min-w-[200px] h-10">
                     <input id="firstName" name="firstName"
@@ -89,7 +89,7 @@ export default function SignupPage() {
                 </div>
 
                 <div className="w-full">
-                  <div className="relative w-full min-w-[200px] h-10">
+                  <div className="relative w-full min-w-[200px] ">
                     <input
                       id="password" name="password"
                       type="password"
@@ -124,9 +124,8 @@ export default function SignupPage() {
                 <SubmitButton
                   className="w-full text-white bg-dark-blue hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                   pendingText="Creating..."
-                  launchText="'Create Account"
-                  >
-                </SubmitButton>
+                  launchText="Create Account"
+                  />
 
               </form>
 
