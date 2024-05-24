@@ -12,7 +12,7 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
-        <div className="flex flex-col lg:w-6/12 w-11/12 items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div className="flex flex-col lg:w-6/12 w-full items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <div className="w-full bg-white rounded-lg shadow-xl shadow-blue md:mt-0 sm:max-w-md xl:p-0">
             <div className="lg:w-8/12 p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl mb-5 font-bold leading-tight tracking-tight text-gray-700 md:text-2xl text-dark-blue">

@@ -13,8 +13,8 @@ export default function SignupPage() {
   
   return (
     <main className="flex min-h-screen flex-col items-center md:items-end md:justify-end md:-mt-14 md:ml-10 mt-5">
-        <div className="flex sm:flex-col md:w-7/12 w-11/12 md:h-screen bg-white rounded-lg shadow-xl shadow-blue items-center">
-          <div className="md:w-10/12 w-full md:ml-auto md:mt-0 xl:p-0">
+        <div className="flex md:w-7/12 w-full justify-center md:h-screen md:bg-white bg-transparent md:rounded-lg md:shadow-xl md:shadow-blue items-center md:px-0 px-6 md:py-0 py-8 md:mx-0 mx-auto">
+          <div className="md:w-10/12 w-full bg-white md:bg-transparent sm:rounded-lg sm:shadow-xl sm:shadow-blue md:ml-auto md:mt-0 xl:p-0">
             <div className="p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl mb-5 font-bold leading-tight tracking-tight text-gray-700 md:text-2xl text-dark-blue">
                 Create Account
@@ -128,10 +128,11 @@ export default function SignupPage() {
                   />
 
               </form>
-
-                <p className="text-sm font-light text-gray-500">
-                  Already have an account? <Link href="/auth" className="text-primary-600 text-dark-blue underline hover:underline">Login</Link>
-                </p>
+                <div>
+                  <p className="text-sm font-light text-gray-500">
+                    Already have an account? <Link href="/auth" className="text-primary-600 text-dark-blue underline hover:underline">Login</Link>
+                  </p>
+                </div>
 
                 <div
                   className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
