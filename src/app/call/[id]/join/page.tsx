@@ -17,7 +17,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
         <div className="flex w-full ">
           <div className="w-3/5 bg-white">
 
-              <VideoCall roomId={params.id} isCaller={isCaller}/>
+              <VideoCall meetingId={params.id} isCaller={isCaller}/>
           </div>
           <div className="w-2/5 bg-dark-blue"></div>
         </div>

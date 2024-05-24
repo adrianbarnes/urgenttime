@@ -14,15 +14,11 @@ const LegAPeer =  ({ peerInstance, onStreamReceived }: {peerInstance: Peer | nul
       if (myVideoRef.current) {
         myVideoRef.current.srcObject = stream;
       }
-      console.log("legA started")
-      console.log("legA peer " + peerInstance);
 
       peerInstance?.on('call', call => {
         call.answer(stream);
-        console.log("answered stream")
         call.on('stream', userVideoStream => {
           // Send the user's video stream to LegB using a callback function
-          console.log("streaming to leg B")
           onStreamReceived(userVideoStream);
         });
         

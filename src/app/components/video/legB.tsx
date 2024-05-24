@@ -6,12 +6,8 @@ const LegBPeer = ({ peerInstance, idToCall, incomingStream }: { peerInstance: Pe
   const callingVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    console.log("loaded LegB")
-    console.log("callId "+ idToCall);
-    console.log("peer instance "+ peerInstance);
 
     if (peerInstance && idToCall) {
-        console.log("starting call for B");
       // Code for handling call and retrieving video stream
       const handleCall = () => {
         navigator.mediaDevices.getUserMedia({
@@ -19,9 +15,7 @@ const LegBPeer = ({ peerInstance, idToCall, incomingStream }: { peerInstance: Pe
           audio: true,
         }).then(stream => {
           const call = peerInstance?.call(idToCall, stream);
-          console.log("listening stream on call for B");
           if (call) {
-            console.log("listen starting call for B");
             call.on('stream', userVideoStream => {
               if (callingVideoRef.current) {
                 callingVideoRef.current.srcObject = userVideoStream;
@@ -30,15 +24,11 @@ const LegBPeer = ({ peerInstance, idToCall, incomingStream }: { peerInstance: Pe
           }
         });
       };
-      console.log("Leg B working");
       
       handleCall();
     }
 
-    console.log("incoming stream is " + incomingStream)
-
     if (incomingStream && callingVideoRef.current) {
-        console.log("Receiving Stream from A");
         callingVideoRef.current.srcObject = incomingStream;
       }
 
