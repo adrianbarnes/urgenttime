@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+# Next.js Application Deployment Guide
+
+This guide will walk you through setting up and deploying the UrgentTime application on a local machine or other environments. Make sure you have the necessary environment variables configured correctly.
+
+## Prerequisites
+
+Before you begin, ensure you have the following software installed on your system:
+
+- [Node.js](https://nodejs.org/en/) (version 14.x or higher)
+
+- [npm](https://www.npmjs.com/) (usually comes with Node.js)
+
+- [Git](https://git-scm.com/)
 
 ## Getting Started
 
-First, run the development server:
+1.  **Clone the repository:**
+ 
+ ```bash
+
+git clone https://github.com/adrianbarnes/urgenttime.git
+
+cd urgenttime
+
+``` 
+  
+2.  **Install dependencies:**
 
 ```bash
+
+npm install
+
+```
+
+3.  **Create a `.env.local` file in the root of your project and add the following environment variables:**
+
+```env
+
+APP_URL=http://localhost:3000
+
+SESSION_SECRET=your_secret_key
+
+GOOGLE_SECRET=your_google_secret
+
+GOOGLE_ID=your_google_id
+
+MAIL_HOST=smt.local.test
+
+MAIL_PORT=567
+
+MAIL_FROM_ADDRESS=hello@urgentime.test
+
+MAIL_USERNAME=null
+
+MAIL_PASSWORD=null
+
+NEXT_PUBLIC_PUSHER_KEY=your_pusher_key
+
+NEXT_PUBLIC_PUSHER_CLUSTER=your_pusher_cluster
+
+PUSHER_APP_ID=your_pusher_app_id
+
+PUSHER_SECRET=your_pusher_secret
+
+```
+
+Replace the variables with the actual values for your environment
+
+4.  **Run the development server:**
+
+```bash
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+-  **APP_URL**: The base URL of your application.
 
-## Learn More
+-  **SESSION_SECRET**: A secret key for session management.
 
-To learn more about Next.js, take a look at the following resources:
+-  **GOOGLE_SECRET**: Your Google API secret for SSO.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-  **GOOGLE_ID**: Your Google API ID for SSO.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+-  **MAIL_HOST**: The mail server host.
 
-## Deploy on Vercel
+-  **MAIL_PORT**: The mail server port.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+-  **MAIL_FROM_ADDRESS**: The email address from which mails will be sent.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+-  **MAIL_USERNAME**: The mail server username (use `null` if not applicable).
+
+-  **MAIL_PASSWORD**: The mail server password (use `null` if not applicable).
+
+-  **NEXT_PUBLIC_PUSHER_KEY**: Pusher public key.
+
+-  **NEXT_PUBLIC_PUSHER_CLUSTER**: Pusher cluster.
+
+-  **PUSHER_APP_ID**: Pusher app ID.
+
+-  **PUSHER_SECRET**: Pusher secret.
+
+## Deployment
+
+To deploy your application, you can use platforms like Vercel, Heroku, or any other cloud service provider that supports Node.js applications.
+
+## Additional Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+
+If you encounter any issues or have questions, feel free to reach out to the team for support. Happy coding!
