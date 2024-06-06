@@ -3,6 +3,7 @@ import Peer from 'peerjs';
 import LegAPeer from '@/app/components/video/legA';
 import LegBPeer from '@/app/components/video/legB';
 import { pusherClient } from '@/app/lib/pusher/pusherClient';
+import LegCPeer from './legC';
 
 interface VideoCallProps {
     meetingId: string;
@@ -100,11 +101,11 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller }) => {
 
         if(isCaller){
             channel.bind('legACallId', (data: any) => {
-                const { legBCallId, isCaller } = data;
-                console.log("listening leg A " + legBCallId)
+                const { legACallId, isCaller } = data;
+                console.log("listening leg A " + legACallId)
 
-                setIdToCall(legBCallId);
-                triggerSaveCallLegId(meetingId, legBCallId);
+                setIdToCall(legACallId);
+                triggerSaveCallLegId(meetingId, legACallId);
                 
             });
 
@@ -145,10 +146,12 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller }) => {
   }, [myUniqueId, meetingId]);
 
   return (
-    <div className='flex flex-col justify-center items-center p-12'>
-      <p>Your ID: {myUniqueId}</p>
+    // <div className='flex flex-col justify-center items-center'>
+      <div className='relative w-full'>
+      {/* <p>Your ID: {myUniqueId}</p> */}
       <LegAPeer peerInstance={peerInstance} onStreamReceived={handleStreamReceived} /> 
       <LegBPeer peerInstance={peerInstance} idToCall={idToCall}  incomingStream={incomingStream}/>
+      
     </div>
   );
 };

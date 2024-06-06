@@ -35,8 +35,8 @@ const LegBPeer = ({ peerInstance, idToCall, incomingStream }: { peerInstance: Pe
   }, [peerInstance, idToCall]);
 
   return (
-    <div>
-      <video className='w-72' playsInline ref={callingVideoRef} autoPlay muted/>
+    <div className='w-full leg-b'>
+      <video className='w-full rounded-l-lg' playsInline ref={callingVideoRef} autoPlay muted/>
     </div>
   );
 };

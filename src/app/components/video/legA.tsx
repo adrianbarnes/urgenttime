@@ -5,6 +5,7 @@ import Peer from 'peerjs';
 
 const LegAPeer =  ({ peerInstance, onStreamReceived }: {peerInstance: Peer | null, onStreamReceived: any}) => {
   const myVideoRef = useRef<HTMLVideoElement>(null);
+  const [receivedFeed, setReceivedFeed] = useState(false);
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({
@@ -20,15 +21,19 @@ const LegAPeer =  ({ peerInstance, onStreamReceived }: {peerInstance: Peer | nul
         call.on('stream', userVideoStream => {
           // Send the user's video stream to LegB using a callback function
           onStreamReceived(userVideoStream);
+
         });
+
+          // Set receivedFeed to true when the stream is received
+          setReceivedFeed(true);        
         
       });
     });
   }, [peerInstance]);
 
   return (
-    <div>
-      <video className='w-72' playsInline ref={myVideoRef} autoPlay muted/>
+    <div className={receivedFeed ? 'w-32 absolute bottom-0 right-0 leg-a' : 'w-full leg-a'}>
+      <video className='w-full rounded-l-lg' playsInline ref={myVideoRef} autoPlay muted/>
     </div>
   );
 };

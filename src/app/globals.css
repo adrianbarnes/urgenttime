@@ -41,6 +41,19 @@ body {
   .bg-forest-green {
     background-color: rgba(36, 122, 44, 1)
   }  
+
+  .bg-indian-yellow {
+    background-color: #DA9D44;
+    background-color: rgba(218, 157, 68, 1);
+  }   
+
+  /* .custom-dark-blue {
+    --dark-blue: rgba(36, 71, 122, 1);
+  }
+  
+  .custom-forest-green {
+    --forest-green: rgba(36, 122, 44, 1);
+  } */
   
   input.iti__tel-input {
     width: 100%;
