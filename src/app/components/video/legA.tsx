@@ -29,18 +29,18 @@ const LegAPeer =  ({ peerInstance, onStreamReceived }: {peerInstance: Peer | nul
           
           call.on('close', () => {
            // Set receivedFeed to true when the stream is received
-           setReceivedFeed(false);           
+           //setReceivedFeed(true);           
             console.log("call media streaming closed retrying in leg A");
             // Attempt to reconnect
-            peerInstance.reconnect();
+            //peerInstance.reconnect();
           });   
           
           call.on('error', () => {
             // Set receivedFeed to true when the stream is received
-            setReceivedFeed(false);           
+            //setReceivedFeed(true);           
              console.log("call streaming has error retrying in leg A");
              // Attempt to reconnect
-             peerInstance.reconnect();
+             //peerInstance.reconnect();
            });          
         
       });

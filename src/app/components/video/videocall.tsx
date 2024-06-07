@@ -78,7 +78,10 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller }) => {
             console.log("is caller");
 
             setMyUniqueId(legAId);
-            setIdToCall(legBId);
+            
+            if(legBId){
+              setIdToCall(legBId);
+            }            
 
             console.log("is caller uniqueid is " + myUniqueId);
             console.log("is caller idTocall " + idToCall )
@@ -126,7 +129,15 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller }) => {
     if(myUniqueId){
         let peer: Peer;
         if (typeof window !== 'undefined') {
-            peer = new Peer(myUniqueId, {});
+            peer = new Peer(myUniqueId, {
+              config: {'iceServers': [
+                { url: "stun:stun.l.google.com:19302" },
+                { url: "stun:stun1.l.google.com:19302" },
+                { url: "stun:stun2.l.google.com:19302" },
+                { url: "stun:stun3.l.google.com:19302" },
+                { url: "stun:stun4.l.google.com:19302" },
+              ]}
+            });
             setPeerInstance(peer);
             console.log("starting connection");
             console.log("uniqueid is " + myUniqueId);
