@@ -3,8 +3,6 @@ import Peer from 'peerjs';
 import LegAPeer from '@/app/components/video/legA';
 import LegBPeer from '@/app/components/video/legB';
 import { pusherClient } from '@/app/lib/pusher/pusherClient';
-import LegCPeer from './legC';
-
 interface VideoCallProps {
     meetingId: string;
     isCaller: boolean;
@@ -50,7 +48,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ meetingId, callLegId }),
+        body: JSON.stringify({ meetingId, callLegId, isCaller }),
       });
   
       if (response.ok) {
@@ -66,12 +64,46 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller }) => {
   const findCallLegId = async () => {
     try {
 
-      const response = await fetch('/api/meetings');
+      const response = await fetch('/api/meetings/' + meetingId);
       if (response.ok) {
         const data = await response.json();
-        const { meetingCallLegId } = data;
-        // Assign the retrieved callLegId to setIdToCall
-        setIdToCall(meetingCallLegId);
+        const { id, meetingId, legAId, legBId } = data;
+
+        console.log("fetch meeting details");
+        console.log(data);
+
+        if(data && Object.keys(data).length > 0){
+          if(isCaller){
+
+            console.log("is caller");
+
+            setMyUniqueId(legAId);
+            setIdToCall(legBId);
+
+            console.log("is caller uniqueid is " + myUniqueId);
+            console.log("is caller idTocall " + idToCall )
+          }
+  
+          if(!isCaller){
+            if(legBId){
+              setMyUniqueId(legBId);
+            }else{
+              setMyUniqueId(generateRandomString);
+            }
+            
+            setIdToCall(legAId);
+           
+            console.log("isnot caller uniqueid is " + myUniqueId);
+            console.log("is not caller idTocall " + idToCall )            
+          }
+
+        }else{
+          console.log("creating new id");
+          setMyUniqueId(generateRandomString);
+        }
+        
+        console.log("fetch");
+
       } else {
         throw new Error('Failed to retrieve callLegId');
       }
@@ -82,9 +114,12 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller }) => {
 
   useEffect(() => {
 
-    setMyUniqueId(generateRandomString);
+    findCallLegId();
 
-  }, []);
+  },
+  //[myUniqueId, idToCall]
+  [meetingId]
+);
 
   useEffect(() => {
             
@@ -93,50 +128,54 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller }) => {
         if (typeof window !== 'undefined') {
             peer = new Peer(myUniqueId, {});
             setPeerInstance(peer);
+            console.log("starting connection");
+            console.log("uniqueid is " + myUniqueId);
+            console.log("idTocall " + idToCall )            
         }
-
-        findCallLegId();
-
-        const channel = pusherClient.subscribe(meetingId);
-
-        if(isCaller){
-            channel.bind('legACallId', (data: any) => {
-                const { legACallId, isCaller } = data;
-                console.log("listening leg A " + legACallId)
-
-                setIdToCall(legACallId);
-                triggerSaveCallLegId(meetingId, legACallId);
-                
-            });
-
-        }
-
-        if(!isCaller){
-            channel.bind('legBCallId', (data: any) => {
-                const { legBCallId, isCaller } = data;
-
-                console.log("listening leg B " + legBCallId)
-
-                setIdToCall(legBCallId);
-
-                triggerSaveCallLegId(meetingId, legBCallId);
-                
-            });
-
-        }        
         
-        triggerPusherEvent(meetingId, myUniqueId);
+
+        // const channel = pusherClient.subscribe(meetingId);
+
+        triggerSaveCallLegId(meetingId, myUniqueId);
+
+        // if(isCaller){
+        //     channel.bind('legACallId', (data: any) => {
+        //         const { legACallId, isCaller } = data;
+        //         console.log("listening leg A " + legACallId)
+
+        //         setIdToCall(legACallId);
+        //         //triggerSaveCallLegId(meetingId, legACallId);
+                
+        //     });
+
+        // }
+
+        // if(!isCaller){
+        //     channel.bind('legBCallId', (data: any) => {
+        //         const { legBCallId, isCaller } = data;
+
+        //         console.log("listening leg B " + legBCallId)
+
+        //         setIdToCall(legBCallId);
+
+        //         //triggerSaveCallLegId(meetingId, legBCallId);
+                
+        //     });
+
+        // }        
+        
+        // triggerPusherEvent(meetingId, myUniqueId);
         
         return () => {
 
             if (peer) {
-            peer.destroy();
+              peer.destroy();
             }
 
             // Unsubscribe from the channel when the component unmounts
-            channel.unbind('uniqueIdBroadcast');
-            pusherClient.unsubscribe(meetingId);
-            pusherClient.disconnect();            
+            //channel.unbind('uniqueIdBroadcast');
+            // pusherClient.unsubscribe(meetingId);
+            // pusherClient.disconnect();            
         };
   
 
