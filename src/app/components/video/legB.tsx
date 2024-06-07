@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const LegBPeer = ({ peerInstance, idToCall, incomingStream }: { peerInstance: Peer | null, idToCall: string, incomingStream: any }) => {
   const callingVideoRef = useRef<HTMLVideoElement>(null);
+  const [reconnecting, setReconnecting] = useState(false);
 
   useEffect(() => {
 
@@ -12,7 +13,7 @@ const LegBPeer = ({ peerInstance, idToCall, incomingStream }: { peerInstance: Pe
       const handleCall = () => {
         navigator.mediaDevices.getUserMedia({
           video: true,
-          audio: true,
+          //audio: true,
         }).then(stream => {
           const call = peerInstance?.call(idToCall, stream);
           if (call) {
@@ -30,18 +31,26 @@ const LegBPeer = ({ peerInstance, idToCall, incomingStream }: { peerInstance: Pe
             //call.
 
             call.on('close', () => {
-          
-               console.log("call media streaming closed retrying in leg B");
-               // Attempt to reconnect
-               //peerInstance.reconnect();
-             });   
-             
-             call.on('error', () => {
-       
-                console.log("call streaming has error retrying in leg B");
-                // Attempt to reconnect
-                //peerInstance.reconnect();
-              });                
+              console.log("call media streaming closed, retrying in leg B");
+              if (!reconnecting) {
+                setReconnecting(true);
+                setTimeout(() => {
+                  handleCall(); // Attempt to reconnect
+                  setReconnecting(false);
+                }, 3000); // Example: Retry after 3 seconds
+              }
+            });
+
+            call.on('error', () => {
+              console.log("call streaming has error, retrying in leg B");
+              if (!reconnecting) {
+                setReconnecting(true);
+                setTimeout(() => {
+                  handleCall(); // Attempt to reconnect
+                  setReconnecting(false);
+                }, 3000); // Example: Retry after 3 seconds
+              }
+            });               
           }
         });    
       };

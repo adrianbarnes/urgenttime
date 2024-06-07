@@ -10,7 +10,7 @@ const LegAPeer =  ({ peerInstance, onStreamReceived }: {peerInstance: Peer | nul
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({
       video: true,
-      audio: true,
+      //audio: true,
     }).then(stream => {
       if (myVideoRef.current) {
         myVideoRef.current.srcObject = stream;
