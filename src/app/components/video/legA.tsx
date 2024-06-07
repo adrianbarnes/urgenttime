@@ -32,7 +32,7 @@ const LegAPeer =  ({ peerInstance, onStreamReceived }: {peerInstance: Peer | nul
            setReceivedFeed(false);           
             console.log("call media streaming closed retrying in leg A");
             // Attempt to reconnect
-            //peerInstance.reconnect();
+            peerInstance.reconnect();
           });   
           
           call.on('error', () => {
@@ -40,7 +40,7 @@ const LegAPeer =  ({ peerInstance, onStreamReceived }: {peerInstance: Peer | nul
             setReceivedFeed(false);           
              console.log("call streaming has error retrying in leg A");
              // Attempt to reconnect
-             //peerInstance.reconnect();
+             peerInstance.reconnect();
            });          
         
       });
