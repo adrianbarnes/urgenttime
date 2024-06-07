@@ -21,13 +21,35 @@ const LegAPeer =  ({ peerInstance, onStreamReceived }: {peerInstance: Peer | nul
         call.on('stream', userVideoStream => {
           // Send the user's video stream to LegB using a callback function
           onStreamReceived(userVideoStream);
-
+          // Set receivedFeed to true when the stream is received
+          setReceivedFeed(true);
         });
 
-          // Set receivedFeed to true when the stream is received
-          setReceivedFeed(true);        
+
+          
+          call.on('close', () => {
+           // Set receivedFeed to true when the stream is received
+           setReceivedFeed(false);           
+            console.log("call media streaming closed retrying in leg A");
+            // Attempt to reconnect
+            //peerInstance.reconnect();
+          });   
+          
+          call.on('error', () => {
+            // Set receivedFeed to true when the stream is received
+            setReceivedFeed(false);           
+             console.log("call streaming has error retrying in leg A");
+             // Attempt to reconnect
+             //peerInstance.reconnect();
+           });          
         
       });
+
+      // peerInstance?.on('disconnected', () => {
+      //   console.log("peer disconneted retrying");
+      //   // Attempt to reconnect
+      //   peerInstance.reconnect();
+      // });          
     });
   }, [peerInstance]);
 

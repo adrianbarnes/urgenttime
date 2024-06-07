@@ -21,8 +21,22 @@ const LegBPeer = ({ peerInstance, idToCall, incomingStream }: { peerInstance: Pe
                 callingVideoRef.current.srcObject = userVideoStream;
               }
             });
+
+            call.on('close', () => {
+          
+               console.log("call media streaming closed retrying in leg B");
+               // Attempt to reconnect
+               peerInstance.reconnect();
+             });   
+             
+             call.on('error', () => {
+       
+                console.log("call streaming has error retrying in leg B");
+                // Attempt to reconnect
+                peerInstance.reconnect();
+              });                
           }
-        });
+        });    
       };
       
       handleCall();
@@ -30,7 +44,7 @@ const LegBPeer = ({ peerInstance, idToCall, incomingStream }: { peerInstance: Pe
 
     if (incomingStream && callingVideoRef.current) {
         callingVideoRef.current.srcObject = incomingStream;
-      }
+      }    
 
   }, [peerInstance, idToCall]);
 
