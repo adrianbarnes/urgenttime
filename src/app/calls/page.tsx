@@ -3,12 +3,14 @@
 import IntlTelInput from "intl-tel-input/react";
 import 'intl-tel-input/build/css/intlTelInput.css';
 import React, { useState, useRef, useEffect } from 'react';
-import { launchCall } from "../actions/launchCall";
+import { launchCall } from "@/app/actions/launchCall";
 import { useFormState, useFormStatus } from "react-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from "react-toastify";
 import SubmitButton from "@/app/components/submit";
 import { redirect } from "next/navigation";
+import {db} from "@/app/lib/dexieDB";
+import LatestCalls from "@/app/components/latestCalls";
 
 
 export default function CallPage() {
@@ -17,12 +19,22 @@ export default function CallPage() {
   const [phoneNumber, setNumber, ] = useState('');
   const phoneInputRef = useRef(null);
 
+  const saveCall = React.useCallback(async () => {
+    if(state?.success && state.call){
+      await db.call.add(state.call);
+    }
+
+  }, [state?.call]);  
+
   useEffect(() => {
     if (state?.success) {
       toast.success(state.success, {
         position: "top-right",
         // other options
       });
+
+
+      saveCall();
 
       redirect(state?.inviteLink +"?is_caller=true")   
     } else if (state?.error) {
@@ -35,7 +47,7 @@ export default function CallPage() {
 
   return (
     
-    <main className="flex min-h-screen flex-col items-center justify-between">
+    <main className="flex flex-col items-center justify-between">
       <div className="container mx-auto mt-14">
         <div className="flex w-full mx-auto">
           <div className="w-full md:w-3/5 p-4 mx-auto bg-white rounded-l-lg">
@@ -92,6 +104,8 @@ export default function CallPage() {
           <div className="hidden sm:block w-2/5 bg-dark-blue rounded-r-lg"></div>
         </div>
       </div>
+
+      <LatestCalls/>
     </main>
   );
 }

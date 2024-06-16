@@ -26,7 +26,7 @@ export const authConfig: NextAuthOptions ={
       
       await createSession(account?.id_token as string, user.email as string)
       
-      return '/call';
+      return '/calls';
     },
   },
 };

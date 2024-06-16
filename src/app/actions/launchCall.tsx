@@ -4,8 +4,10 @@ import { FormState, LaunchCallFormSchema} from "../lib/definitions";
 import { sendMail } from "../lib/emailer";
 import { render } from "@react-email/components";
 import InviteEmail from "../emails/invite";
-import { generateInviteLink } from "../lib/utils";
+import { generateInviteLink, generateRandomString } from "../lib/utils";
 import { getUser } from "../lib/dal";
+import Call from "@/models/call";
+import { CallStatus } from "@/enum/callStatus";
 
 export async function launchCall(state: FormState, formData: FormData) {
     // Validate form fields
@@ -24,9 +26,12 @@ export async function launchCall(state: FormState, formData: FormData) {
 
     const { email} = validatedFields.data;
 
-    const inviteLink = generateInviteLink();
+    const meetLink = generateRandomString(10);
+
+    const inviteLink = generateInviteLink(meetLink);
     const user = await getUser();
     const username = user?.username as string;
+
 
     const html = render(<InviteEmail userName={username} inviteLink={inviteLink}/>,
     {
@@ -35,8 +40,19 @@ export async function launchCall(state: FormState, formData: FormData) {
 
     try {
         await sendMail('from', email, 'Invitation to Join Call', html, "");
-    
-        return { success: 'Mail sent successfully', inviteLink: inviteLink };
+
+        const timeStamp = new Date().toISOString();
+
+        const call: Call = {
+          meetingId: meetLink,
+          userId: user?.id as string,
+          email: email,
+          status: CallStatus.LINK_SENT,
+          createdAt: timeStamp,
+          updatedAt: timeStamp,
+        };
+        
+        return { success: 'Mail sent successfully', inviteLink: inviteLink, call: call };
       } catch (error) {
         return { error: 'Failed to send mail' };
       }

@@ -1,8 +1,9 @@
 'use server'
 
 import { redirect } from "next/navigation";
-import { FormState, LoginFormSchema } from "../lib/definitions";
-import { createSession } from "../lib/session";
+import { FormState, LoginFormSchema } from "@/app/lib/definitions";
+import { createSession } from "@/app/lib/session";
+import { generateRandomString } from "@/app/lib/utils";
 
 export async function login(state: FormState, formData: FormData) {
     // Validate form fields
@@ -18,16 +19,18 @@ export async function login(state: FormState, formData: FormData) {
       }
     }
    
-    const { email, password } = validatedFields.data
+    const { email, password } = validatedFields.data;
+
+    const id = generateRandomString(11);
 
     const user = {
-        id: "1234",
+        id: id,
         email,
         password
 
     }
 
     await createSession(user.id, user.email)
-    redirect('/call')    
+    redirect('/calls')    
   }
   

@@ -1,8 +1,16 @@
+import { CallStatus } from "@/enum/callStatus";
+
 interface Call {
     id?: string;
     meetingId: string;
-    legAId: string;
-    legBId?: string;
+    phoneNumber?: string;
+    email?: string;
+    userId: string;
+    status?: CallStatus;
+    startedAt?: string;
+    endedAt?: string;
+    createdAt: string;
+    updatedAt: string;
 
   }
   

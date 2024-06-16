@@ -1,34 +1,34 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Peer from 'peerjs';
-import LegAPeer from '@/app/components/video/legA';
-import LegBPeer from '@/app/components/video/legB';
 import { pusherClient } from '@/app/lib/pusher/pusherClient';
+import VideoFeed from '@/app/components/video/videoFeed';
+import Call from '@/models/call';
+import { Channel } from 'pusher-js';
 interface VideoCallProps {
     meetingId: string;
     isCaller: boolean;
+    handlePeerInstance: any;
+    currentCall: Call | null;
+    channel: Channel | null;
+    triggerCallStatus: any;
+    updateCall: any;
   }
 
-const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller }) => {
+const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, handlePeerInstance, currentCall, triggerCallStatus, updateCall }) => {
   const [peerInstance, setPeerInstance] = useState<Peer | null>(null);
-  const [myUniqueId, setMyUniqueId] = useState<string>("");
+  const [myUniqueId, setMyUniqueId] = useState<string | null>(null);
   const [idToCall, setIdToCall] = useState('');
  
-
-  const [incomingStream, setIncomingStream] = useState<MediaStream | null>(null);
-  const handleStreamReceived = (stream: MediaStream) => {
-    setIncomingStream(stream);
-  };
-
   const generateRandomString = () => Math.random().toString(36).substring(2);
 
-  const triggerPusherEvent = async (meetingId: string, myUniqueId: string) => {
+  const triggerPusherEvent = async (myUniqueId: string) => {
     try {
-      const response = await fetch('/api/meetings/pusher', {
+      const response = await fetch(`/api/meetings/${meetingId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ meetingId, myUniqueId, isCaller }),
+        body: JSON.stringify({ myUniqueId, isCaller }),
       });
   
       if (response.ok) {
@@ -41,96 +41,45 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller }) => {
     }
   };
 
-  const triggerSaveCallLegId = async (meetingId: string, callLegId: string) => {
-    try {
-      const response = await fetch('/api/meetings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ meetingId, callLegId, isCaller }),
-      });
+  useEffect(() => {
+    setMyUniqueId(generateRandomString);
+
+  },[]);  
+
+  useEffect(() => {
+    if(peerInstance){
+      peerInstance.on('open', (peerId) => {
+
+        console.log("peer connected on " + peerId);
   
-      if (response.ok) {
-        console.log('Save Call Leg Id triggered successfully');
-      } else {
-        throw new Error('Failed to trigger Save Call Leg Id');
-      }
-    } catch (error) {
-      console.error('Failed to trigger Save Call Leg Id:', error);
-    }
-  };  
-
-  const findCallLegId = async () => {
-    try {
-
-      const response = await fetch('/api/meetings/' + meetingId);
-      if (response.ok) {
-        const data = await response.json();
-        const { id, meetingId, legAId, legBId } = data;
-
-        console.log("fetch meeting details");
-        console.log(data);
-
-        if(data && Object.keys(data).length > 0){
-          if(isCaller){
-
-            console.log("is caller");
-
-            setMyUniqueId(legAId);
-            
-            if(legBId){
-              setIdToCall(legBId);
-            }            
-
-            console.log("is caller uniqueid is " + myUniqueId);
-            console.log("is caller idTocall " + idToCall )
+        if(isCaller && currentCall){
+          if(!currentCall.startedAt){
+            currentCall.startedAt = new Date().toISOString();
           }
   
-          if(!isCaller){
-            if(legBId){
-              setMyUniqueId(legBId);
-            }else{
-              setMyUniqueId(generateRandomString);
-            }
-            
-            setIdToCall(legAId);
-           
-            console.log("isnot caller uniqueid is " + myUniqueId);
-            console.log("is not caller idTocall " + idToCall )            
-          }
-
-        }else{
-          console.log("creating new id");
-          setMyUniqueId(generateRandomString);
+          updateCall(currentCall)
         }
+
+        if(myUniqueId){
+          triggerPusherEvent( myUniqueId);
+        }
+  
         
-        console.log("fetch");
-
-      } else {
-        throw new Error('Failed to retrieve callLegId');
-      }
-    } catch (error) {
-      console.error('Failed to retrieve callLegId:', error);
+      });
     }
-  };  
 
-  useEffect(() => {
 
-    findCallLegId();
+  },[peerInstance, currentCall]);  
 
-  },
-  //[myUniqueId, idToCall]
-  [meetingId]
-);
 
-  useEffect(() => {
-            
+  useEffect(() => {     
     if(myUniqueId){
         let peer: Peer;
         if (typeof window !== 'undefined') {
-            peer = new Peer(myUniqueId, {
+          
+            peer = new Peer(myUniqueId,{
               config: {'iceServers': [
+              
                 { url: "stun:stun.l.google.com:19302" },
                 { url: "stun:stun1.l.google.com:19302" },
                 { url: "stun:stun2.l.google.com:19302" },
@@ -138,70 +87,56 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller }) => {
                 { url: "stun:stun4.l.google.com:19302" },
               ]}
             });
+
             setPeerInstance(peer);
-            console.log("starting connection");
-            console.log("uniqueid is " + myUniqueId);
-            console.log("idTocall " + idToCall )            
+            handlePeerInstance(peer);
+                  
         }
-        
 
-        // const channel = pusherClient.subscribe(meetingId);
 
-        triggerSaveCallLegId(meetingId, myUniqueId);
+        if(isCaller){
+            channel?.bind('legACallId', (data: any) => {
+                const { legCallId, isCaller } = data;
+                console.log("Received in leg A " + data)
+                console.log("listening leg A " + legCallId)
 
-        // if(isCaller){
-        //     channel.bind('legACallId', (data: any) => {
-        //         const { legACallId, isCaller } = data;
-        //         console.log("listening leg A " + legACallId)
-
-        //         setIdToCall(legACallId);
-        //         //triggerSaveCallLegId(meetingId, legACallId);
+                setIdToCall(legCallId);
                 
-        //     });
+            });
 
-        // }
+        }
 
-        // if(!isCaller){
-        //     channel.bind('legBCallId', (data: any) => {
-        //         const { legBCallId, isCaller } = data;
+        if(!isCaller){
+            channel?.bind('legBCallId', (data: any) => {
+                const { legCallId, isCaller } = data;
+                console.log("Received in leg B " + data)
 
-        //         console.log("listening leg B " + legBCallId)
+                console.log("listening leg B " + legCallId)
 
-        //         setIdToCall(legBCallId);
-
-        //         //triggerSaveCallLegId(meetingId, legBCallId);
+                setIdToCall(legCallId);
                 
-        //     });
+            });
 
-        // }        
-        
-        // triggerPusherEvent(meetingId, myUniqueId);
+        }    
         
         return () => {
-
             if (peer) {
               peer.destroy();
             }
-
             // Unsubscribe from the channel when the component unmounts
-            //channel.unbind('uniqueIdBroadcast');
-            // pusherClient.unsubscribe(meetingId);
-            // pusherClient.disconnect();            
+            if (channel?.subscribed) {
+              channel?.unbind('legBCallId');
+              channel?.unbind('legACallId');  
+            }         
         };
   
-
     }
   
-   
   }, [myUniqueId, meetingId]);
 
   return (
-    // <div className='flex flex-col justify-center items-center'>
       <div className='relative w-full'>
-      {/* <p>Your ID: {myUniqueId}</p> */}
-      <LegAPeer peerInstance={peerInstance} onStreamReceived={handleStreamReceived} /> 
-      <LegBPeer peerInstance={peerInstance} idToCall={idToCall}  incomingStream={incomingStream}/>
-      
+      <VideoFeed peerInstance={peerInstance} idToCall={idToCall} isCaller={isCaller} triggerCallStatus={triggerCallStatus} updateCall={updateCall} currentCall={currentCall} />
     </div>
   );
 };
