@@ -130,7 +130,7 @@ type ConnectionTabProps = {
 
           <div className='states mt-7 mb-8 pb-6'>
               <ul className='list-none grid gap-4'>
-
+                  { connectedStatus &&
                   <li className='text-sm text-dark-blue'>
                     <Image
                       src={connectedStatus.src}
@@ -140,7 +140,7 @@ type ConnectionTabProps = {
                       className='inline mr-3'
                     />
                     Successfully connected
-                  </li>
+                  </li> }
                   
               </ul>
           </div>
