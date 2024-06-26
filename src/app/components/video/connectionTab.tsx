@@ -20,6 +20,49 @@ type ConnectionTabProps = {
     const inProgressCheck = '/inprogress-check.svg';
     const completedCheck = '/completed-check.svg';
 
+    const [items, setItems] = useState([
+      { id: formatEnumValue(CallStatus.LINK_SENT), src: completedCheck, alt: CallStatus.LINK_SENT, text: CallStatus.LINK_SENT },
+      { id: formatEnumValue(CallStatus.RECIPIENT_CLICKED_ON_LINK), src: inProgressCheck, alt: CallStatus.RECIPIENT_CLICKED_ON_LINK, text: CallStatus.RECIPIENT_CLICKED_ON_LINK },
+      { id: formatEnumValue(CallStatus.CONTACT_ACCEPTED_ACCESS_To_CAMERA), src: pendingCheck, alt: CallStatus.CONTACT_ACCEPTED_ACCESS_To_CAMERA, text: CallStatus.CONTACT_ACCEPTED_ACCESS_To_CAMERA },
+      { id: formatEnumValue(CallStatus.CALL_CONNECTED), src: pendingCheck, alt: CallStatus.CALL_CONNECTED, text: CallStatus.CALL_CONNECTED }
+    ]);  
+
+    const updateItemSrc = (index: number) => {
+      const updatedItems = [...items];
+      updatedItems.forEach((item, i) => {
+        if (i <= index) {
+          item.src = completedCheck;
+        } else if (i === index + 1) {
+          item.src = inProgressCheck;
+        } else {
+          item.src = pendingCheck;
+        }
+      });
+    
+      // If there is no index after index 2, set index 2 src to '/completed-check.svg'
+      if (index === updatedItems.length - 1) {
+        updatedItems[index].src = completedCheck;
+      }
+
+      setItems(updatedItems);
+    
+      console.log('Updated items:', items);
+    };    
+    
+    const findItemByKey = (id: string) => {
+
+      const foundIndex = items.findIndex(item => item.id === id);
+      if (foundIndex !== -1) {
+        updateItemSrc(foundIndex);
+        return { item: items[foundIndex], index: foundIndex };
+      } else {
+        return { item: null, index: -1 };
+      }      
+    };    
+
+
+    const connectedStatus = items.find(item => item.id === formatEnumValue(CallStatus.CALL_CONNECTED));
+
     const destroyPeerInstance = () => {
       if (peerInstance) {
         peerInstance.destroy();
@@ -40,13 +83,13 @@ type ConnectionTabProps = {
     useEffect(() => {
 
       channel?.bind('callStatus', (data: any) => {
-        const {callStatus } = data;
-        console.log("Received call Status" + data)
+        const { callStatus } = data;
+        console.log("Received call Status " + data)
+        console.log("call Status is " + callStatus)
         setCallStatus(callStatus); 
 
-        const enumPosition = Object.values(CallStatus).indexOf(callStatus);
+        findItemByKey(callStatus);
 
-        console.log("Enum Position " + enumPosition)
     });    
       return () => {
         channel?.unbind('callStatus');
@@ -67,45 +110,18 @@ type ConnectionTabProps = {
 
           <div className='states mt-3 mb-8 pb-6'>
               <ul className='list-none grid gap-4'>
-                  <li className='text-sm text-dark-blue'><Image
-                  src="/completed-check.svg"
-                  alt="Link has been sent"
-                  width={15}
-                  height={15}
-                  className='inline mr-3'
-                  />Link has been sent</li>
-
-                  {/* <li className='text-sm text-dark-blue'><Image
-                  src="/completed-check.svg"
-                  alt="Link has been received"
-                  width={15}
-                  height={15}
-                  className='inline mr-3'
-                  />Link has been received</li> */}
-
-                  <li className='text-sm text-dark-blue'><Image
-                  src="/pending-check.svg"
-                  alt="Contact has clicked on the link"
-                  width={15}
-                  height={15}
-                  className='inline mr-3'
-                  />Contact has clicked on the link</li>
-
-                  <li className='text-sm text-dark-blue'><Image
-                  src="/inprogress-check.svg"
-                  alt="Contact accepted access to camera"
-                  width={15}
-                  height={15}
-                  className='inline mr-3'
-                  />Contact accepted access to camera</li>
-
-                  <li className='text-sm text-dark-blue'><Image
-                  src="/pending-check.svg"
-                  alt="Successfully connected"
-                  width={15}
-                  height={15}
-                  className='inline mr-3'
-                  />Successfully connected</li>
+              {items.map((item, index) => (
+                  <li key={index} className='text-sm text-dark-blue'>
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      width={15}
+                      height={15}
+                      className='inline mr-3'
+                    />
+                    {item.text}
+                  </li>
+                ))}
               </ul>
           </div>
         </div> ) : (
@@ -115,13 +131,17 @@ type ConnectionTabProps = {
           <div className='states mt-7 mb-8 pb-6'>
               <ul className='list-none grid gap-4'>
 
-                  <li className='text-sm text-dark-blue'><Image
-                  src="/completed-check.svg"
-                  alt="Call Connected"
-                  width={15}
-                  height={15}
-                  className='inline mr-3'
-                  />Successfully connected</li>
+                  <li className='text-sm text-dark-blue'>
+                    <Image
+                      src={connectedStatus.src}
+                      alt={connectedStatus.alt}
+                      width={15}
+                      height={15}
+                      className='inline mr-3'
+                    />
+                    Successfully connected
+                  </li>
+                  
               </ul>
           </div>
         </div>  )}    

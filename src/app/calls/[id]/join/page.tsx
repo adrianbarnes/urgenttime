@@ -113,6 +113,11 @@ export default function JoinPage({ params }: { params: { id: string } }) {
         <div className="w-full md:w-3/5 bg-white rounded-l-lg">
         <CameraPermission
           onPermissionGranted={() => {
+            
+            if(!isCaller){
+              triggerCallStatus(formatEnumValue(CallStatus.CONTACT_ACCEPTED_ACCESS_To_CAMERA));
+            }  
+            
             setIsPermissionGranted(true);
           }}
         />

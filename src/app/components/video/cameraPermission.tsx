@@ -9,7 +9,7 @@ const CameraPermission: React.FC<CameraPermissionProps> = ({ onPermissionGranted
 
     useEffect(() => {
       checkCameraPermission();
-    }, []); // Run this effect only once when component mounts
+    }, []);
 
     const EnableButton = () => {  
     
@@ -26,23 +26,22 @@ const CameraPermission: React.FC<CameraPermissionProps> = ({ onPermissionGranted
       
     const EnablePermissionMessage = () => {  
 
-    return  (
-        <div className="md:w-1/2 w-full p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
-            <p>Urgenttime needs access to your camera so that the other participant can see you.</p>
-            <EnableButton/>
-        </div>
-        )
+        return  (
+            <div className="md:w-1/2 w-full p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
+                <p>Urgenttime needs access to your camera so that the other participant can see you.</p>
+                <EnableButton/>
+            </div>
+            )
     };
 
     const EnablePermissionMessageForDenied = () => {  
-
         return  (
             <div className="md:w-1/2 w-full p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
                 <p>You have previously denied camera access. Urgenttime needs access to your camera so that the other participant can see you.</p>
                 <EnableButton/>
             </div>
             )
-        };    
+    };    
 
     const requestCameraPermission = async () => {
         try {
