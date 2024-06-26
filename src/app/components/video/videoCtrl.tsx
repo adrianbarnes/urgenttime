@@ -38,7 +38,7 @@ const VideoCtrl = (props: VideoCtrlProps) => {
 
     const newConstraints = {
       facingMode: isFrontCamera ? 'user' : 'environment',
-    };   
+    }; 
      
     updateVideoConstraints(newConstraints);
   }, [isFrontCamera]);  
@@ -55,6 +55,7 @@ const VideoCtrl = (props: VideoCtrlProps) => {
   
 
   const toggleCamera = () => {
+    console.log("add");
     setIsFrontCamera(prevIsFrontCamera => !prevIsFrontCamera); // Toggle between front and rear camera
   };
 
@@ -68,15 +69,17 @@ const VideoCtrl = (props: VideoCtrlProps) => {
   return (
     <div className='inset-x-0 absolute bottom-4 flex flex-col items-center text-white'>
       <p className='text-2xl'>{formatCallTime(callTime)}</p>
-      
-      {camerasAvailable && ( <a onClick={toggleCamera}>
+
+      {camerasAvailable && ( <button onClick={toggleCamera}>
         <Image src="/camera-switch.svg" alt="Camera Toggle Switch"
                 className=""
                 width={30}
                 height={30}
               />
-      </a> 
-      )}
+      </button> 
+      )} 
+
+       
 
     </div>
   );
