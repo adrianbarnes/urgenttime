@@ -8,7 +8,7 @@ const CameraPermission: React.FC<CameraPermissionProps> = ({ onPermissionGranted
     const [permissionStatus, setPermissionStatus] = useState('undetermined');
 
     useEffect(() => {
-      checkCameraPermission();
+        requestCameraPermission();
     }, []);
 
     const EnableButton = () => {  
@@ -54,40 +54,19 @@ const CameraPermission: React.FC<CameraPermissionProps> = ({ onPermissionGranted
           // Permission denied or error
           setPermissionStatus('denied');
         }
-      };    
 
-    const checkCameraPermission = async () => {
-      try {
-        const status = await navigator.permissions.query({ name: 'camera' });
-        if (status.state === 'granted') {
-          // Permission already granted
-          setPermissionStatus('granted');
-          onPermissionGranted(); // Call the callback function
-        } else if (status.state === 'prompt') {
-          // Permission not determined yet
-          setPermissionStatus('undetermined');
-        } else {
-          // Permission denied
-          setPermissionStatus('denied');
-        }
-      } catch (error) {
-        // Error occurred while checking permission
-        console.error('Error checking camera permission:', error);
-      }
-    };
-  
-    if (permissionStatus === 'denied') {
-      return <EnablePermissionMessageForDenied/>;
-    }
-  
-    if (permissionStatus === 'granted') {
-      // Render component for camera usage
-      return <p>Camera permission granted!</p>;
-    }
-  
-    // Permission status undetermined or prompt
-    return <EnablePermissionMessage/>;
-  };
-  
+        if (permissionStatus === 'denied') {
+            return <EnablePermissionMessageForDenied/>;
+          }
+        
+          if (permissionStatus === 'granted') {
+            // Render component for camera usage
+            return <p>Camera permission granted!</p>;
+          }
+        
+          // Permission status undetermined or prompt
+          return <EnablePermissionMessage/>;        
+      };    
+}
 
 export default CameraPermission;
