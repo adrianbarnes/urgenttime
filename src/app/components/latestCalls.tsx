@@ -7,7 +7,7 @@ import Call from "@/models/call";
 const CallHistory: FC = () => {
 
   // dexie hook to get live data 
-  const callList = useLiveQuery(() => db.call.limit(10).toArray());
+  const callList = useLiveQuery(() => db.call.reverse().limit(10).toArray());
 
   const formatDateTime = (datetime: moment.Moment) => {
 
