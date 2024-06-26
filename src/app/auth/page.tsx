@@ -6,9 +6,11 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { login } from "@/app/actions/auth";
 import { signIn } from "next-auth/react";
 import SubmitButton from "@/app/components/submit";
+import { useState } from "react";
 
 export default function LoginPage() {
-  const [state, action] = useFormState(login, undefined)
+  const [state, action] = useFormState(login, undefined);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
@@ -40,7 +42,7 @@ export default function LoginPage() {
                   <div className="relative w-full min-w-[200px] h-10">
                     <input
                       id="password" name="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"} 
                       className="peer w-full h-full bg-transparent text-blue-gray-700
                       font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all
                       placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200
@@ -52,6 +54,14 @@ export default function LoginPage() {
                       Password
                     </label>
                     {state?.errors?.password && <p className='text-sm text-red-500'>{state.errors.password}</p>}
+
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(prevState => !prevState)}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                    >
+                      {showPassword ? '🙈' : '👁️'}
+                    </button>
                   </div>
                 </div>
 
