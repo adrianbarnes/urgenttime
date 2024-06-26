@@ -54,19 +54,20 @@ const CameraPermission: React.FC<CameraPermissionProps> = ({ onPermissionGranted
           // Permission denied or error
           setPermissionStatus('denied');
         }
-
-        if (permissionStatus === 'denied') {
-            return <EnablePermissionMessageForDenied/>;
-          }
-        
-          if (permissionStatus === 'granted') {
-            // Render component for camera usage
-            return <p>Camera permission granted!</p>;
-          }
-        
-          // Permission status undetermined or prompt
-          return <EnablePermissionMessage/>;        
+      
       };    
-}
+  
+    if (permissionStatus === 'denied') {
+      return <EnablePermissionMessageForDenied/>;
+    }
+  
+    if (permissionStatus === 'granted') {
+      // Render component for camera usage
+      return <p>Camera permission granted!</p>;
+    }
+  
+    // Permission status undetermined or prompt
+    return <EnablePermissionMessage/>;
+  }; 
 
 export default CameraPermission;
