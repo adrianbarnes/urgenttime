@@ -94,7 +94,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
         }       
       });          
     });
-  }, [peerInstance]);
+  }, [legAVideoConstraints,peerInstance]);
 
   useEffect(() => {
   
@@ -168,7 +168,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
 
   return (
     <div className="">
-      <div className={receivedFeed ? 'w-32 absolute bottom-0 right-0 leg-a md:block hidden' : 'w-full leg-a'}>
+      <div className={receivedFeed ? 'w-32 absolute bottom-0 right-0 leg-a md:block' : 'w-full leg-a'}>
         <video className='w-full rounded-l-lg' playsInline ref={videoRef} autoPlay muted/>
       </div>
 
