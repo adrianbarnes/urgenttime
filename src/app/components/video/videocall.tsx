@@ -90,6 +90,16 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, han
 
             setPeerInstance(peer);
             handlePeerInstance(peer);
+
+            peer?.on('disconnected', function() {
+              console.log("peer destroyed");
+  
+              });
+  
+            peer?.on('close', function() {
+              console.log("peer closed");
+              
+              });              
                   
         }
 

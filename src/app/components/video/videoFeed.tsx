@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Peer from 'peerjs';
 import { CallStatus, formatEnumValue } from '@/enum/callStatus';
 import Call from '@/models/call';
+import VideoCtrl from '@/app/components/video/videoCtrl';
 
 type VideoFeedProps = {
   peerInstance: Peer | null,
@@ -20,10 +21,15 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
   const callingVideoRef = useRef<HTMLVideoElement>(null);
   const [receivedFeed, setReceivedFeed] = useState(false);
   const [reconnecting, setReconnecting] = useState(false);
+  const [legAVideoConstraints, setLegAVideoConstraints] = useState(true);
+
+  const updateVideoConstraints = (newConstraints: any) => {
+    setLegAVideoConstraints(newConstraints);
+  };  
 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({
-      video: true,
+      video: legAVideoConstraints,
       //audio: true,
     }).then(stream => {
 
@@ -53,8 +59,6 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
             };
           }
 
-          // Send the user's video stream to LegB using a callback function
-          //onStreamReceived(userVideoStream);
           // Set receivedFeed to true when the stream is received
           setReceivedFeed(true);
         });
@@ -152,8 +156,11 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
                   setReconnecting(false);
                 }, 3000); // Example: Retry after 3 seconds
               }
-            });               
+            });  
+                        
+          
           }
+          
         });    
       };
 
@@ -166,8 +173,9 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
       </div>
 
       <div className={receivedFeed ? 'w-full leg-b': 'hidden leg-b'}>
-      <video className='w-full rounded-l-lg' playsInline ref={callingVideoRef} autoPlay muted/>
+        <video className='w-full rounded-l-lg' playsInline ref={callingVideoRef} autoPlay muted/>
       </div>  
+      <VideoCtrl updateVideoConstraints={updateVideoConstraints}/>
     </div>  
   );
 };

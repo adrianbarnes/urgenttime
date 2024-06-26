@@ -12,35 +12,32 @@ const CameraPermission: React.FC<CameraPermissionProps> = ({ onPermissionGranted
     }, []);
 
     const EnableButton = () => {  
-    
-        return (
-          <button
-           
+      return (
+        <button
           className="w-full text-white bg-dark-blue hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
           onClick={requestCameraPermission}
           >
-            Enable Camera
-          </button>
-        );
-      };
+          Enable Camera
+        </button>
+      );
+    };
       
     const EnablePermissionMessage = () => {  
-
-        return  (
-            <div className="md:w-1/2 w-full p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
-                <p>Urgenttime needs access to your camera so that the other participant can see you.</p>
-                <EnableButton/>
-            </div>
-            )
+      return  (
+          <div className="md:w-1/2 w-full p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
+              <p>Urgenttime needs access to your camera so that the other participant can see you.</p>
+              <EnableButton/>
+          </div>
+          )
     };
 
     const EnablePermissionMessageForDenied = () => {  
-        return  (
-            <div className="md:w-1/2 w-full p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
-                <p>You have previously denied camera access. Urgenttime needs access to your camera so that the other participant can see you.</p>
-                <EnableButton/>
-            </div>
-            )
+      return  (
+          <div className="md:w-1/2 w-full p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
+              <p>You have previously denied camera access. Urgenttime needs access to your camera so that the other participant can see you.</p>
+              <EnableButton/>
+          </div>
+          )
     };    
 
     const requestCameraPermission = async () => {
