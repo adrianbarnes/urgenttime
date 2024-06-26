@@ -51,7 +51,7 @@ export default function CallPage() {
       <div className="container mx-auto mt-14">
         <div className="flex w-full mx-auto">
           <div className="w-full md:w-3/5 p-4 mx-auto bg-white rounded-l-lg">
-            <div className="md:w-1/2 w-full  p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
+            <div className="md:w-1/2 w-full p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl my-8 text-center font-bold leading-tight tracking-tight text-gray-700 md:text-2xl text-dark-blue">
                 Start a new call
               </h1>

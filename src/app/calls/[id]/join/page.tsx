@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { pusherClient } from '@/app/lib/pusher/pusherClient';
 import { Channel } from 'pusher-js';
 import { CallStatus, formatEnumValue } from '@/enum/callStatus';
+import CameraPermission from '@/app/components/video/cameraPermission';
 
 export default function JoinPage({ params }: { params: { id: string } }) {
 
@@ -25,7 +26,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
 
   const meetingId = params.id;
 
-  //const channel : Channel = pusherClient.subscribe(meetingId);
+  const [isPermissionGranted, setIsPermissionGranted] = useState(false);
 
   const handlePeerInstance = (peer: Peer) => {
     setPeerInstance(peer);
@@ -107,7 +108,19 @@ export default function JoinPage({ params }: { params: { id: string } }) {
   <main className="flex min-h-screen flex-col items-center justify-between">
     <div className="container mx-auto mt-14">
       <div className="flex flex-col-reverse md:flex-row w-full ">
-        <div className="w-full md:w-3/5 bg-black rounded-l-lg">
+        
+        {!isPermissionGranted && (
+        <div className="w-full md:w-3/5 bg-white rounded-l-lg">
+        <CameraPermission
+          onPermissionGranted={() => {
+            setIsPermissionGranted(true);
+          }}
+        />
+
+        </div>
+      )}
+      {isPermissionGranted &&   
+      <div className="w-full md:w-3/5 bg-black rounded-l-lg">        
           <VideoCall
           meetingId={meetingId}
           currentCall={currentCall}
@@ -115,13 +128,27 @@ export default function JoinPage({ params }: { params: { id: string } }) {
           channel={channel}
           handlePeerInstance={handlePeerInstance}
           updateCall={updateCall}
-          isCaller={isCaller}/>
-        </div>
-        <div className="w-full md:w-2/5 bg-white rounded-r-lg">
-          <div className='w-3/5 mx-auto'>
-            <ConnectionTab currentCall={currentCall} updateCall={updateCall} channel={channel} peerInstance={peerInstance}/>
-          </div>
-        </div>
+          isCaller={isCaller}/> 
+           </div>
+          }
+
+          {!isPermissionGranted && ( 
+            <div className="w-full md:w-2/5 bg-dark-blue rounded-r-lg"></div>
+          )}
+
+          {isPermissionGranted && 
+            <div className="w-full md:w-2/5 bg-white rounded-r-lg">
+              <div className='w-3/5 mx-auto'>
+              
+                <ConnectionTab
+                  currentCall={currentCall}
+                  updateCall={updateCall}
+                  channel={channel}
+                  peerInstance={peerInstance}/>
+              
+              </div>
+            </div>
+        }
       </div>
     </div>
   </main>
