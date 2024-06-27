@@ -49,6 +49,11 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
       
       peerInstance?.on('call', call => {
         call.answer(stream);
+
+        const [videoTrack] = stream.getVideoTracks();
+
+        call.peerConnection.getSenders()[0].replaceTrack(videoTrack);
+        
         call.on('stream', userVideoStream => {
           
           if(callingVideoRef.current){
@@ -175,7 +180,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
         });    
       };
 
-  }, [legAVideoConstraints, peerInstance, idToCall]);
+  }, [peerInstance, idToCall]);
 
   return (
     <div className="">
