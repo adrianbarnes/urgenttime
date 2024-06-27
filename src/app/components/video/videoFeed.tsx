@@ -132,20 +132,20 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
              
             });
         // Update the local stream when the camera is toggled
-        localStream.getTracks().forEach(track => {
-          track.addEventListener('ended', () => {
-            navigator.mediaDevices.getUserMedia({ video: true })
-              .then(newStream => {
-                if (callingVideoRef.current) {
-                  callingVideoRef.current.srcObject = newStream; // Update the srcObject for the local video
-                  localStream = newStream;
-                }
-              })
-              .catch(error => {
-                console.error('Error replacing video track:', error);
-              });
-          });
-        });
+        // localStream.getTracks().forEach(track => {
+        //   track.addEventListener('ended', () => {
+        //     navigator.mediaDevices.getUserMedia({ video: true })
+        //       .then(newStream => {
+        //         if (callingVideoRef.current) {
+        //           callingVideoRef.current.srcObject = newStream; // Update the srcObject for the local video
+        //           localStream = newStream;
+        //         }
+        //       })
+        //       .catch(error => {
+        //         console.error('Error replacing video track:', error);
+        //       });
+        //   });
+        // });
 
             call.on('close', () => {
               console.log("call media streaming closed, retrying in leg B");
@@ -175,7 +175,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
         });    
       };
 
-  }, [peerInstance, idToCall]);
+  }, [legAVideoConstraints, peerInstance, idToCall]);
 
   return (
     <div className="">
