@@ -94,18 +94,18 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
         }       
       });          
     });
-  }, [legAVideoConstraints,peerInstance]);
+  }, [legAVideoConstraints, peerInstance]);
 
   useEffect(() => {
   
     if (idToCall) {
+      let localStream;
       // Code for handling call and retrieving video stream
         navigator.mediaDevices.getUserMedia({
           video: true,
           //audio: true,
         }).then(stream => {
-
-          console.log("leg B " + idToCall)
+          localStream = stream;
 
           const call = peerInstance?.call(idToCall, stream);
           if (call) {
@@ -115,9 +115,6 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
                 videoRef.current?.play();
               };
             }
-
-            console.log("call has connected");
-            console.log(call);
             call.on('stream', userVideoStream => {
 
               console.log("is streaming in Leg B")
@@ -134,7 +131,21 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
               }                
              
             });
-            //call.
+        // Update the local stream when the camera is toggled
+        localStream.getTracks().forEach(track => {
+          track.addEventListener('ended', () => {
+            navigator.mediaDevices.getUserMedia({ video: true })
+              .then(newStream => {
+                if (callingVideoRef.current) {
+                  callingVideoRef.current.srcObject = newStream; // Update the srcObject for the local video
+                  localStream = newStream;
+                }
+              })
+              .catch(error => {
+                console.error('Error replacing video track:', error);
+              });
+          });
+        });
 
             call.on('close', () => {
               console.log("call media streaming closed, retrying in leg B");
@@ -168,7 +179,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
 
   return (
     <div className="">
-      <div className={receivedFeed ? 'w-32 absolute bottom-0 right-0 leg-a md:block' : 'w-full leg-a'}>
+      <div className={receivedFeed ? 'md:w-32 w-16 absolute bottom-0 right-0 leg-a md:block' : 'w-full leg-a'}>
         <video className='w-full rounded-l-lg' playsInline ref={videoRef} autoPlay muted/>
       </div>
 
