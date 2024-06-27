@@ -52,7 +52,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
 
         const [videoTrack] = stream.getVideoTracks();
 
-        call.peerConnection.getSenders()[0].replaceTrack(videoTrack);
+        call.peerConnection.getSenders()[1].replaceTrack(videoTrack);
         
         call.on('stream', userVideoStream => {
           
