@@ -55,7 +55,6 @@ const VideoCtrl = (props: VideoCtrlProps) => {
   
 
   const toggleCamera = () => {
-    console.log("add");
     setIsFrontCamera(prevIsFrontCamera => !prevIsFrontCamera); // Toggle between front and rear camera
   };
 

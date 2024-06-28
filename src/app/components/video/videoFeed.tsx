@@ -28,6 +28,8 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
   };  
 
   useEffect(() => {
+    let stream: MediaStream | null;
+
     navigator.mediaDevices.getUserMedia({
       video: legAVideoConstraints,
       //audio: true,
@@ -49,6 +51,13 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
       
       peerInstance?.on('call', call => {
         call.answer(stream);
+        const [videoTrack] = stream.getVideoTracks();
+
+        console.log("get videoTrack" + videoTrack);
+
+        call.peerConnection.getSenders()[0].replaceTrack(videoTrack);
+
+        console.log("replaced track");
         
         call.on('stream', userVideoStream => {
           
@@ -95,6 +104,11 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
         }       
       });          
     });
+
+    return () => {
+      // Clean up function to stop tracks and close connections
+      stream?.getTracks().forEach(track => track.stop());
+    };   
   }, [legAVideoConstraints, peerInstance]);
 
   useEffect(() => {
@@ -116,10 +130,6 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
             }
             call.on('stream', userVideoStream => {
               
-              const [videoTrack] = stream.getVideoTracks();
-
-              call.peerConnection.getSenders()[1].replaceTrack(videoTrack);
-
               console.log("is streaming in Leg B")
 
               // Set receivedFeed to true when the stream is received
