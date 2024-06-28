@@ -27,38 +27,45 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
     setLegAVideoConstraints(newConstraints);
   };  
 
-  useEffect(() => {
-    let stream: MediaStream | null;
+// Modify the existing useEffect hook to handle stream updates when legAVideoConstraints change
+useEffect(() => {
+  let mediaStream : MediaStream | null; // Declare a variable to store the media stream
 
-    navigator.mediaDevices.getUserMedia({
-      video: legAVideoConstraints,
-      //audio: true,
-    }).then(stream => {
+  const startStream = async () => {
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(track => track.stop()); // Stop the previous media stream tracks
+    }
 
-
-      if(!isCaller){
-        triggerCallStatus(formatEnumValue(CallStatus.CALL_CONNECTED));
-      }
-
-      if(videoRef.current){
-        videoRef.current.srcObject = stream;
-        
-
+    try {
+      mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: legAVideoConstraints,
+        // audio: true, // Include this line if needed
+      });
+      
+      // Set up the media stream for the local video element
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
         videoRef.current.onloadedmetadata = () => {
           videoRef.current?.play();
         };
-     }
+      }
       
+      // Set up the event listener for incoming call
       peerInstance?.on('call', call => {
-        call.answer(stream);
-        const [videoTrack] = stream.getVideoTracks();
-
-        console.log("get videoTrack" + videoTrack);
-
-        call.peerConnection.getSenders()[0].replaceTrack(videoTrack);
-
-        console.log("replaced track");
+        console.log("listen for call");
+        if(mediaStream){
+          call.answer(mediaStream); // Answer the call by sending the new media stream
         
+          const [videoTrack] = mediaStream.getVideoTracks(); // Get the updated video track from the new media stream
+  
+          console.log("get videoTrack" + videoTrack);
+          
+          // Replace the video track being sent to the peer using the peerConnection
+          call.peerConnection.getSenders()[0].replaceTrack(videoTrack);
+          
+          console.log("replaced track");
+        }
+
         call.on('stream', userVideoStream => {
           
           if(callingVideoRef.current){
@@ -72,44 +79,110 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
           // Set receivedFeed to true when the stream is received
           setReceivedFeed(true);
         });
-
-          call.on('close', () => {
-           // Set receivedFeed to true when the stream is received
-           //setReceivedFeed(true);           
-            console.log("call media streaming closed retrying in leg A");
-            // Attempt to reconnect
-            //peerInstance.reconnect();
-          });   
-          
-          call.on('error', () => {
-            // Set receivedFeed to true when the stream is received
-            //setReceivedFeed(true);           
-             console.log("call streaming has error retrying in leg A");
-             // Attempt to reconnect
-             //peerInstance.reconnect();
-           });          
-        
+        // Continue with the rest of the call event handlers
+        // ...
       });
 
-      peerInstance?.on('disconnected', () => {
-        console.log("peer disconneted retrying");
-        // Attempt to reconnect
-        //peerInstance.reconnect();
+    } catch (error) {
+      // Handle any errors that occur during stream retrieval
+      console.error("Error accessing media devices:", error);
+    }
+  };
 
-        if(currentCall){
+  startStream(); // Call the function to start the initial stream
 
-          currentCall.endedAt = new Date().toISOString();
+  return () => {
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(track => track.stop()); // Stop the media stream tracks when the component unmounts
+    }
+  };
+}, [legAVideoConstraints, peerInstance]);
+
+
+  // useEffect(() => {
+  //   let stream: MediaStream | null;
+
+  //   navigator.mediaDevices.getUserMedia({
+  //     video: legAVideoConstraints,
+  //     //audio: true,
+  //   }).then(stream => {
+
+
+  //     if(!isCaller){
+  //       triggerCallStatus(formatEnumValue(CallStatus.CALL_CONNECTED));
+  //     }
+
+  //     if(videoRef.current){
+  //       videoRef.current.srcObject = stream;
+        
+
+  //       videoRef.current.onloadedmetadata = () => {
+  //         videoRef.current?.play();
+  //       };
+  //    }
+      
+  //     peerInstance?.on('call', call => {
+  //       console.log("listen for call")
+  //       call.answer(stream);
+  //       const [videoTrack] = stream.getVideoTracks();
+
+  //       console.log("get videoTrack" + videoTrack);
+
+  //       call.peerConnection.getSenders()[0].replaceTrack(videoTrack);
+
+  //       console.log("replaced track");
+        
+  //       call.on('stream', userVideoStream => {
           
-          updateCall(currentCall)
-        }       
-      });          
-    });
+  //         if(callingVideoRef.current){
+  //           callingVideoRef.current.srcObject = userVideoStream;
 
-    return () => {
-      // Clean up function to stop tracks and close connections
-      stream?.getTracks().forEach(track => track.stop());
-    };   
-  }, [legAVideoConstraints, peerInstance]);
+  //           callingVideoRef.current.onloadedmetadata = () => {
+  //             callingVideoRef.current?.play();
+  //           };
+  //         }
+
+  //         // Set receivedFeed to true when the stream is received
+  //         setReceivedFeed(true);
+  //       });
+
+  //         call.on('close', () => {
+  //          // Set receivedFeed to true when the stream is received
+  //          //setReceivedFeed(true);           
+  //           console.log("call media streaming closed retrying in leg A");
+  //           // Attempt to reconnect
+  //           //peerInstance.reconnect();
+  //         });   
+          
+  //         call.on('error', () => {
+  //           // Set receivedFeed to true when the stream is received
+  //           //setReceivedFeed(true);           
+  //            console.log("call streaming has error retrying in leg A");
+  //            // Attempt to reconnect
+  //            //peerInstance.reconnect();
+  //          });          
+        
+  //     });
+
+  //     peerInstance?.on('disconnected', () => {
+  //       console.log("peer disconneted retrying");
+  //       // Attempt to reconnect
+  //       //peerInstance.reconnect();
+
+  //       if(currentCall){
+
+  //         currentCall.endedAt = new Date().toISOString();
+          
+  //         updateCall(currentCall)
+  //       }       
+  //     });          
+  //   });
+
+  //   return () => {
+  //     // Clean up function to stop tracks and close connections
+  //     stream?.getTracks().forEach(track => track.stop());
+  //   };   
+  // }, [legAVideoConstraints, peerInstance]);
 
   useEffect(() => {
   

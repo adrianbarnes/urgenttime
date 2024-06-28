@@ -45,8 +45,6 @@ type ConnectionTabProps = {
       }
 
       setItems(updatedItems);
-    
-      console.log('Updated items:', items);
     };    
     
     const findItemByKey = (id: string) => {
