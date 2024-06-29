@@ -107,7 +107,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
       });
 
       peerInstance?.on('disconnected', () => {
-        console.log("peer disconneted retrying");
+        console.log("peer disconnected retrying");
         // Attempt to reconnect
         //peerInstance.reconnect();
 
@@ -120,7 +120,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
       });     
       
       peerInstance?.on('close', () => {
-        console.log("peer disconneted retrying");
+        console.log("peer closed retrying");
    
       });          
 
