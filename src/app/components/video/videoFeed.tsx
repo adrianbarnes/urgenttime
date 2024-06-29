@@ -40,6 +40,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
         // audio: true, // Include this line if needed
       });
       
+      
       // Set up the media stream for the local video element
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
@@ -52,16 +53,19 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
       peerInstance?.on('call', call => {
         console.log("listen for call");
         if(mediaStream){
+          
           call.answer(mediaStream); // Answer the call by sending the new media stream
         
           const [videoTrack] = mediaStream.getVideoTracks(); // Get the updated video track from the new media stream
-  
-          console.log("get videoTrack" + videoTrack);
-          
+
           // Replace the video track being sent to the peer using the peerConnection
           call.peerConnection.getSenders()[0].replaceTrack(videoTrack);
+
+          if(!isCaller){
+            triggerCallStatus(formatEnumValue(CallStatus.CALL_CONNECTED));
+          }          
           
-          console.log("replaced track");
+
         }
 
         call.on('stream', userVideoStream => {
@@ -77,7 +81,43 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
           // Set receivedFeed to true when the stream is received
           setReceivedFeed(true);
         });
+
+        call.on('close', () => {
+          console.log("call media streaming closed, retrying in leg A");
+          if (!reconnecting) {
+            setReconnecting(true);
+            setTimeout(() => {
+              //handleCall(); // Attempt to reconnect
+              setReconnecting(false);
+            }, 3000); // Example: Retry after 3 seconds
+          }
+        });
+
+        call.on('error', () => {
+          console.log("call streaming has error, retrying in leg A");
+          if (!reconnecting) {
+            setReconnecting(true);
+            setTimeout(() => {
+              //handleCall(); // Attempt to reconnect
+              setReconnecting(false);
+            }, 3000); // Example: Retry after 3 seconds
+          }
+        }); 
+
       });
+
+      peerInstance?.on('disconnected', () => {
+        console.log("peer disconneted retrying");
+        // Attempt to reconnect
+        //peerInstance.reconnect();
+
+        if(currentCall){
+
+          currentCall.endedAt = new Date().toISOString();
+          
+          updateCall(currentCall)
+        }       
+      });       
 
       if (idToCall && mediaStream) {
         // Code for handling call and retrieving video stream
@@ -142,19 +182,35 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
       
   };
 
+  useEffect(() => {
+    let mediaStream : MediaStream | null = mediaStreamRef.current;
 
-// Modify the existing useEffect hook to handle stream updates when legAVideoConstraints change
-useEffect(() => {
-  let mediaStream : MediaStream | null = mediaStreamRef.current; // Declare a variable to store the media stream
+    const handleDeviceChange = async () => {
+      // Get the list of media devices
+      const devices = await navigator.mediaDevices.enumerateDevices();
 
-  startStream(mediaStream); // Call the function to start the initial stream
+      // Check if the video input source (camera) is available
+      const videoInputAvailable = devices.some(device => device.kind === 'videoinput');
+      
+      if (videoInputAvailable) {
+        // Reinitialize the video stream
+        startStream(mediaStream);
+      }
+    };
 
-  return () => {
-    if (mediaStream) {
-      mediaStream.getTracks().forEach(track => track.stop()); // Stop the media stream tracks when the component unmounts
-    }
-  };
-}, [legAVideoConstraints, idToCall, peerInstance]);
+    handleDeviceChange();
+  
+    // Add event listener for device change
+    navigator.mediaDevices.ondevicechange = handleDeviceChange;
+
+    return () => {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop()); // Stop the media stream tracks when the component unmounts
+      }
+
+      navigator.mediaDevices.ondevicechange = null;
+    };
+  }, [legAVideoConstraints, idToCall, peerInstance]);
 
   return (
     <div className="">
