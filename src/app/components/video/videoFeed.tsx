@@ -23,6 +23,8 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
   const [reconnecting, setReconnecting] = useState(false);
   const [legAVideoConstraints, setLegAVideoConstraints] = useState(true);
 
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+
   const updateVideoConstraints = (newConstraints: any) => {
     setLegAVideoConstraints(newConstraints);
   };  
@@ -143,7 +145,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
 
 // Modify the existing useEffect hook to handle stream updates when legAVideoConstraints change
 useEffect(() => {
-  let mediaStream : MediaStream | null; // Declare a variable to store the media stream
+  let mediaStream : MediaStream | null = mediaStreamRef.current; // Declare a variable to store the media stream
 
   startStream(mediaStream); // Call the function to start the initial stream
 
