@@ -3,6 +3,7 @@ enum CallStatus {
     RECIPIENT_CLICKED_ON_LINK = "Recipient Clicked On link",
     CONTACT_ACCEPTED_ACCESS_To_CAMERA = "Contact accepted access to camera",
     CALL_CONNECTED = "Call Connected",
+    CALL_TERMINATED = "Call TERMINATED",
     
   }
 
@@ -10,5 +11,10 @@ enum CallStatus {
     return value.replace(/\s+/g, '_').toUpperCase(); // Remove spaces from the enum value
   }
 
+  function findEnumFromValue(value: string): CallStatus | null {
+    const formattedValue = formatEnumValue(value);
+    const matchingEnumValue = Object.values(CallStatus).find((enumValue) => formatEnumValue(enumValue) === formattedValue);
+    return matchingEnumValue as CallStatus | null;
+  }
 
-  export {CallStatus, formatEnumValue};
+  export {CallStatus, formatEnumValue, findEnumFromValue};

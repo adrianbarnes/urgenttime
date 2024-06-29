@@ -6,16 +6,18 @@ import EndCallButton from '@/app/components/video/endCallButton';
 import Peer from 'peerjs';
 import Call from '@/models/call';
 import { Channel } from 'pusher-js';
-import {CallStatus, formatEnumValue} from '@/enum/callStatus';
+import {CallStatus, findEnumFromValue, formatEnumValue} from '@/enum/callStatus';
+import { toast } from 'react-toastify';
 
 type ConnectionTabProps = {
     peerInstance: Peer | null,
     currentCall: Call | null,
     channel: Channel | null;
     updateCall: any;
+    triggerCallDisconnect: any;
   }
-  const ConnectionTab: React.FC<ConnectionTabProps> = ({ peerInstance, currentCall, channel, updateCall }) => {  
-    const [callStatus, setCallStatus] = useState<string>(''); 
+  const ConnectionTab: React.FC<ConnectionTabProps> = ({ peerInstance, currentCall, channel, updateCall, triggerCallDisconnect }) => {  
+    const [callStatus, setCallStatus] = useState<CallStatus | null>(null); 
     const pendingCheck = '/pending-check.svg';
     const inProgressCheck = '/inprogress-check.svg';
     const completedCheck = '/completed-check.svg';
@@ -45,8 +47,6 @@ type ConnectionTabProps = {
       }
 
       setItems(updatedItems);
-    
-      console.log('Updated items:', items);
     };    
     
     const findItemByKey = (id: string) => {
@@ -54,7 +54,20 @@ type ConnectionTabProps = {
       const foundIndex = items.findIndex(item => item.id === id);
       if (foundIndex !== -1) {
         updateItemSrc(foundIndex);
-        return { item: items[foundIndex], index: foundIndex };
+
+        const item = items[foundIndex];
+
+        const recievedStatus = findEnumFromValue(id);
+
+        setCallStatus(recievedStatus);         
+
+        if(currentCall && recievedStatus){
+          currentCall.status = recievedStatus;
+
+          updateCall(currentCall);
+        }
+
+        return { item: item, index: foundIndex };
       } else {
         return { item: null, index: -1 };
       }      
@@ -65,6 +78,7 @@ type ConnectionTabProps = {
 
     const destroyPeerInstance = () => {
       if (peerInstance) {
+        const peerId = peerInstance.id
         peerInstance.destroy();
 
         if(currentCall){
@@ -73,6 +87,8 @@ type ConnectionTabProps = {
           
           updateCall(currentCall)
         }
+
+        triggerCallDisconnect(CallStatus.CALL_TERMINATED);
         
         if (typeof window !== 'undefined') {
           window.location.href = '/calls';
@@ -83,16 +99,37 @@ type ConnectionTabProps = {
     useEffect(() => {
 
       channel?.bind('callStatus', (data: any) => {
-        const { callStatus } = data;
-        console.log("Received call Status " + data)
-        console.log("call Status is " + callStatus)
-        setCallStatus(callStatus); 
+          const { callStatus } = data;
+          console.log("Received call Status " + data)
+          console.log("call Status is " + callStatus);
 
-        findItemByKey(callStatus);
+          findItemByKey(callStatus);
 
-    });    
+      });    
+
+      channel?.bind('callClose', (data: any) => {
+        toast.info("Call has been ended", {
+         // position: "top-center",
+          autoClose: 5000,
+          closeOnClick: true,
+        });
+        
+        if(currentCall){
+
+          currentCall.status = CallStatus.CALL_TERMINATED;
+          
+          updateCall(currentCall)
+        }
+
+
+        if (typeof window !== 'undefined') {
+          window.location.href = '/calls';
+        }
+      }); 
+
       return () => {
         channel?.unbind('callStatus');
+        channel?.unbind('callClose');
       };
     }, [channel]);    
 

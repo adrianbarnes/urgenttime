@@ -10,11 +10,11 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     });
   }
 
-    const { callStatus } = await req.json();
+    const { callStatus, eventType } = await req.json();
 
     try {
 
-      pusherServer.trigger(meetingId, 'callStatus', { callStatus: callStatus });
+      pusherServer.trigger(meetingId, eventType, { callStatus: callStatus });
   
       return new Response('Pusher event triggered successfully', {
         status: 200,

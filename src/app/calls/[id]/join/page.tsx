@@ -35,13 +35,36 @@ export default function JoinPage({ params }: { params: { id: string } }) {
   
   const triggerCallStatus = async (callStatus: string) => {
     try {
-   
+      const eventType = 'callStatus';
+
       const response = await fetch(`/api/meetings/${meetingId}/status`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ callStatus }),
+        body: JSON.stringify({ callStatus, eventType}),
+      });
+  
+      if (response.ok) {
+        console.log('Pusher event triggered successfully');
+      } else {
+        throw new Error('Failed to trigger Pusher event');
+      }
+    } catch (error) {
+      console.error('Failed to trigger Pusher event:', error);
+    }
+  };  
+
+  const triggerCallDisconnect = async (callStatus: string) => {
+    try {
+      const eventType = 'callClose';
+      
+      const response = await fetch(`/api/meetings/${meetingId}/status`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ callStatus, eventType}),
       });
   
       if (response.ok) {
@@ -107,7 +130,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
     
   <main className="flex min-h-screen flex-col items-center justify-between">
     <div className="container mx-auto mt-14">
-      <div className="flex flex-col md:flex-row w-full ">
+      <div className="flex flex-col md:flex-row w-full h-full">
         
         {!isPermissionGranted && (
         <div className="w-full md:w-3/5 bg-white rounded-l-lg">
@@ -149,6 +172,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
                   currentCall={currentCall}
                   updateCall={updateCall}
                   channel={channel}
+                  triggerCallDisconnect={triggerCallDisconnect}
                   peerInstance={peerInstance}/>
               
               </div>

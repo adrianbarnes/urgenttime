@@ -21,7 +21,8 @@ const VideoCtrl = (props: VideoCtrlProps) => {
     const getVideoDevices = async () => {
       try {
         const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');        
+
         if (videoDevices.length >= 2) {
           // At least 2 video input devices are available (front and rear cameras)
           setCamerasAvailable(true);
@@ -55,7 +56,6 @@ const VideoCtrl = (props: VideoCtrlProps) => {
   
 
   const toggleCamera = () => {
-    console.log("add");
     setIsFrontCamera(prevIsFrontCamera => !prevIsFrontCamera); // Toggle between front and rear camera
   };
 
