@@ -107,7 +107,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
     
   <main className="flex min-h-screen flex-col items-center justify-between">
     <div className="container mx-auto mt-14">
-      <div className="flex flex-col md:flex-row w-full ">
+      <div className="flex flex-col md:flex-row w-full h-full">
         
         {!isPermissionGranted && (
         <div className="w-full md:w-3/5 bg-white rounded-l-lg">

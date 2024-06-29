@@ -213,13 +213,13 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
   }, [legAVideoConstraints, idToCall, peerInstance]);
 
   return (
-    <div className="">
+    <div className="max-h-screen overflow-hidden">
       <div className={receivedFeed ? 'md:w-32 w-16 absolute bottom-0 right-0 leg-a md:block' : 'w-full leg-a'}>
-        <video className='w-full rounded-l-lg' playsInline ref={videoRef} autoPlay muted/>
+        <video className='w-full rounded-l-lg rounded-r-lg md:rounded-r-none' playsInline ref={videoRef} autoPlay muted/>
       </div>
 
       <div className={receivedFeed ? 'w-full leg-b': 'hidden leg-b'}>
-        <video className='w-full rounded-l-lg' playsInline ref={callingVideoRef} autoPlay muted/>
+        <video className='w-full rounded-l-lg rounded-r-lg md:rounded-r-none max-h-max' playsInline ref={callingVideoRef} autoPlay muted/>
       </div>  
       <VideoCtrl updateVideoConstraints={updateVideoConstraints}/>
     </div>  
