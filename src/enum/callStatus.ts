@@ -10,5 +10,10 @@ enum CallStatus {
     return value.replace(/\s+/g, '_').toUpperCase(); // Remove spaces from the enum value
   }
 
+  function findEnumFromValue(value: string): CallStatus | null {
+    const formattedValue = formatEnumValue(value);
+    const matchingEnumValue = Object.values(CallStatus).find((enumValue) => formatEnumValue(enumValue) === formattedValue);
+    return matchingEnumValue as CallStatus | null;
+  }
 
-  export {CallStatus, formatEnumValue};
+  export {CallStatus, formatEnumValue, findEnumFromValue};

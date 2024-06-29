@@ -117,7 +117,12 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
           
           updateCall(currentCall)
         }       
-      });       
+      });     
+      
+      peerInstance?.on('close', () => {
+        console.log("peer disconneted retrying");
+   
+      });          
 
       if (idToCall && mediaStream) {
         // Code for handling call and retrieving video stream
@@ -150,14 +155,9 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
     
     
               call.on('close', () => {
-                console.log("call media streaming closed, retrying in leg B");
-                if (!reconnecting) {
-                  setReconnecting(true);
-                  setTimeout(() => {
-                    //handleCall(); // Attempt to reconnect
-                    setReconnecting(false);
-                  }, 3000); // Example: Retry after 3 seconds
-                }
+
+                console.log("call media streaming closed, retrying in leg B");               
+
               });
     
               call.on('error', () => {

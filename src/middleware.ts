@@ -3,7 +3,7 @@ import { decrypt } from '@/app/lib/session'
 import { cookies } from 'next/headers'
  
 // 1. Specify protected and public routes
-const protectedRoutes = ['/call']
+const protectedRoutes = ['/calls']
 const publicRoutes = ['/login', '/signup', '/']
  
 export default async function middleware(req: NextRequest) {
@@ -25,9 +25,9 @@ export default async function middleware(req: NextRequest) {
   if (
     isPublicRoute &&
     session?.userId &&
-    !req.nextUrl.pathname.startsWith('/call')
+    !req.nextUrl.pathname.startsWith('/calls')
   ) {
-    return NextResponse.redirect(new URL('/call', req.nextUrl))
+    return NextResponse.redirect(new URL('/calls', req.nextUrl))
   }
  
   return NextResponse.next()
