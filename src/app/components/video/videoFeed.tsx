@@ -87,6 +87,62 @@ useEffect(() => {
       // Handle any errors that occur during stream retrieval
       console.error("Error accessing media devices:", error);
     }
+
+    if (idToCall && mediaStream) {
+      // Code for handling call and retrieving video stream
+          const call = peerInstance?.call(idToCall, mediaStream);
+          if (call) {
+
+            if(videoRef.current){
+              videoRef.current.srcObject = mediaStream;
+              videoRef.current.onloadedmetadata = () => {
+                videoRef.current?.play();
+              };
+            }
+            
+            call.on('stream', userVideoStream => {
+              
+              console.log("is streaming in Leg B")
+  
+              // Set receivedFeed to true when the stream is received
+              setReceivedFeed(true);
+  
+              if (callingVideoRef.current) {
+                callingVideoRef.current.srcObject = userVideoStream;
+  
+                callingVideoRef.current.onloadedmetadata = () => {
+                  callingVideoRef.current?.play();
+                };
+              }                
+             
+            });
+  
+  
+            call.on('close', () => {
+              console.log("call media streaming closed, retrying in leg B");
+              if (!reconnecting) {
+                setReconnecting(true);
+                setTimeout(() => {
+                  //handleCall(); // Attempt to reconnect
+                  setReconnecting(false);
+                }, 3000); // Example: Retry after 3 seconds
+              }
+            });
+  
+            call.on('error', () => {
+              console.log("call streaming has error, retrying in leg B");
+              if (!reconnecting) {
+                setReconnecting(true);
+                setTimeout(() => {
+                  //handleCall(); // Attempt to reconnect
+                  setReconnecting(false);
+                }, 3000); // Example: Retry after 3 seconds
+              }
+            });  
+                        
+          
+          }  
+      };      
   };
 
   startStream(); // Call the function to start the initial stream
@@ -96,7 +152,7 @@ useEffect(() => {
       mediaStream.getTracks().forEach(track => track.stop()); // Stop the media stream tracks when the component unmounts
     }
   };
-}, [legAVideoConstraints, peerInstance]);
+}, [legAVideoConstraints, idToCall, peerInstance]);
 
 
   // useEffect(() => {
@@ -184,70 +240,70 @@ useEffect(() => {
   //   };   
   // }, [legAVideoConstraints, peerInstance]);
 
-  useEffect(() => {
+  // useEffect(() => {
   
-    if (idToCall) {
-      // Code for handling call and retrieving video stream
-        navigator.mediaDevices.getUserMedia({
-          video: true,
-          //audio: true,
-        }).then(stream => {
+  //   if (idToCall) {
+  //     // Code for handling call and retrieving video stream
+  //       navigator.mediaDevices.getUserMedia({
+  //         video: true,
+  //         //audio: true,
+  //       }).then(stream => {
 
-          const call = peerInstance?.call(idToCall, stream);
-          if (call) {
-            if(videoRef.current){
-              videoRef.current.srcObject = stream;
-              videoRef.current.onloadedmetadata = () => {
-                videoRef.current?.play();
-              };
-            }
-            call.on('stream', userVideoStream => {
+  //         const call = peerInstance?.call(idToCall, stream);
+  //         if (call) {
+  //           if(videoRef.current){
+  //             videoRef.current.srcObject = stream;
+  //             videoRef.current.onloadedmetadata = () => {
+  //               videoRef.current?.play();
+  //             };
+  //           }
+  //           call.on('stream', userVideoStream => {
               
-              console.log("is streaming in Leg B")
+  //             console.log("is streaming in Leg B")
 
-              // Set receivedFeed to true when the stream is received
-              setReceivedFeed(true);
+  //             // Set receivedFeed to true when the stream is received
+  //             setReceivedFeed(true);
 
-              if (callingVideoRef.current) {
-                callingVideoRef.current.srcObject = userVideoStream;
+  //             if (callingVideoRef.current) {
+  //               callingVideoRef.current.srcObject = userVideoStream;
 
-                callingVideoRef.current.onloadedmetadata = () => {
-                  callingVideoRef.current?.play();
-                };
-              }                
+  //               callingVideoRef.current.onloadedmetadata = () => {
+  //                 callingVideoRef.current?.play();
+  //               };
+  //             }                
              
-            });
+  //           });
 
 
-            call.on('close', () => {
-              console.log("call media streaming closed, retrying in leg B");
-              if (!reconnecting) {
-                setReconnecting(true);
-                setTimeout(() => {
-                  //handleCall(); // Attempt to reconnect
-                  setReconnecting(false);
-                }, 3000); // Example: Retry after 3 seconds
-              }
-            });
+  //           call.on('close', () => {
+  //             console.log("call media streaming closed, retrying in leg B");
+  //             if (!reconnecting) {
+  //               setReconnecting(true);
+  //               setTimeout(() => {
+  //                 //handleCall(); // Attempt to reconnect
+  //                 setReconnecting(false);
+  //               }, 3000); // Example: Retry after 3 seconds
+  //             }
+  //           });
 
-            call.on('error', () => {
-              console.log("call streaming has error, retrying in leg B");
-              if (!reconnecting) {
-                setReconnecting(true);
-                setTimeout(() => {
-                  //handleCall(); // Attempt to reconnect
-                  setReconnecting(false);
-                }, 3000); // Example: Retry after 3 seconds
-              }
-            });  
+  //           call.on('error', () => {
+  //             console.log("call streaming has error, retrying in leg B");
+  //             if (!reconnecting) {
+  //               setReconnecting(true);
+  //               setTimeout(() => {
+  //                 //handleCall(); // Attempt to reconnect
+  //                 setReconnecting(false);
+  //               }, 3000); // Example: Retry after 3 seconds
+  //             }
+  //           });  
                         
           
-          }
+  //         }
           
-        });    
-      };
+  //       });    
+  //     };
 
-  }, [peerInstance, idToCall]);
+  // }, [peerInstance, idToCall]);
 
   return (
     <div className="">
