@@ -21,7 +21,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, han
  
   const generateRandomString = () => Math.random().toString(36).substring(2);
 
-  const triggerPusherEvent = async (myUniqueId: string) => {
+  const triggerMeetingId = async (myUniqueId: string) => {
     try {
       const response = await fetch(`/api/meetings/${meetingId}`, {
         method: 'POST',
@@ -61,7 +61,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, han
         }
 
         if(myUniqueId){
-          triggerPusherEvent( myUniqueId);
+          triggerMeetingId( myUniqueId);
         }
   
         
@@ -107,8 +107,12 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, han
         if(isCaller){
             channel?.bind('legACallId', (data: any) => {
                 const { legCallId, isCaller } = data;
-                console.log("Received in leg A " + data)
-                console.log("listening leg A " + legCallId)
+                console.log("Received in leg A " + legCallId)
+  
+
+                // if(idToCall != legCallId){
+                //   triggerMeetingId( myUniqueId);
+                // }
 
                 setIdToCall(legCallId);
                 
@@ -119,10 +123,12 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, han
         if(!isCaller){
             channel?.bind('legBCallId', (data: any) => {
                 const { legCallId, isCaller } = data;
-                console.log("Received in leg B " + data)
+                console.log("Received in leg B " + legCallId)             
 
-                console.log("listening leg B " + legCallId)
-
+                // if(idToCall != legCallId){
+                //   triggerMeetingId( myUniqueId);
+                // } 
+                
                 setIdToCall(legCallId);
                 
             });

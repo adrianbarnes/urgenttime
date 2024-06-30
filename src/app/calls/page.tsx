@@ -95,9 +95,9 @@ export default function CallPage() {
                   </div>
                 </div>
 
-                <p className="my-4 text-center text-sm text-dark-blue font-light">
+                {/* <p className="my-4 text-center text-sm text-dark-blue font-light">
                   Use phone number
-                </p>
+                </p> */}
 
                 <SubmitButton
                   className="w-full text-white bg-forest-green hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
