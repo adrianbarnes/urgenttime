@@ -45,7 +45,11 @@ body {
   .bg-indian-yellow {
     background-color: #DA9D44;
     background-color: rgba(218, 157, 68, 1);
-  }   
+  } 
+  
+  .border-dark-blue{
+    border-color: #24477a
+  }
 
   /* .custom-dark-blue {
     --dark-blue: rgba(36, 71, 122, 1);

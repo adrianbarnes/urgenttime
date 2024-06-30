@@ -96,7 +96,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
       }
 
     };   
-  }, [pusherClient]);    
+  }, []);    
 
   // Query the database for the call with the matching meetingId
   useEffect(() => {
