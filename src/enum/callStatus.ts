@@ -3,7 +3,7 @@ enum CallStatus {
     RECIPIENT_CLICKED_ON_LINK = "Recipient Clicked On link",
     CONTACT_ACCEPTED_ACCESS_To_CAMERA = "Contact accepted access to camera",
     CALL_CONNECTED = "Call Connected",
-    CALL_TERMINATED = "Call TERMINATED",
+    CALL_TERMINATED = "Call Terminated",
     
   }
 
