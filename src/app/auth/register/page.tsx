@@ -7,42 +7,39 @@ import { signIn } from 'next-auth/react';
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 export default function SignupPage() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');  
-  const [errors, setErrors] = useState<{} | string | null |undefined>(null);  
+  const [formData, setFormData] = useState<{ firstName: string, lastName: string, email: string; password: string }>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  });
+  const [errors, setErrors] = useState<Record<string , string[]>>({});
 
-  const handleSubmit = async (e) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
+   
    
     e.preventDefault();
 
     try {
-      const validatedFields = SignupFormSchema.safeParse({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
-      });   
+      const validatedFields = SignupFormSchema.safeParse(formData);   
 
-      console.log("creating To account");
-      
       if (!validatedFields.success) {
-        setErrors(
-          validatedFields.error.flatten().fieldErrors
-        )
-
-        console.log("errors", validatedFields.error.flatten().fieldErrors);
+        setErrors(validatedFields.error.flatten().fieldErrors)
 
         return;
       }    
       
-      
+      const {email, password} = formData;
 
       const result = await signIn('credentials', {
         email,
@@ -50,20 +47,23 @@ export default function SignupPage() {
       });
 
       if (!result?.error) {
-        setErrors(result?.error);
+        toast.error(result?.error)
+      
         return;
       } 
 
       await signIn("credentials", {
         email: email,
         password: password,
-        //redirect: true,
       })
 
+      if (!result?.error) {
+        toast.error(result?.error)
+      } 
     } catch (error) {
-      console.log("error " + error)
-      setErrors(error);
-      // setErrors(error.errors.map((err) => err.message));
+      console.log("error registering", error)
+      toast.error("Whoops!. It is not you it is us. Retry again")
+
     }
   };  
 
@@ -79,8 +79,7 @@ export default function SignupPage() {
                 <div className="flex-1 md:flex md:gap-4 md:space-y-0 space-y-5">
                  <div className="w-full">
                   <div className="relative w-full min-w-[200px] h-10">
-                    <input id="firstName" value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)} name="firstName"
+                    <input id="firstName" value={formData.firstName} onChange={handleChange} name="firstName"
                       className="
                       peer w-full h-full bg-transparent
                       text-blue-gray-700 font-sans font-normal outline outline-0
@@ -95,14 +94,13 @@ export default function SignupPage() {
                         className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
                       Firstname
                     </label>
-                    {/* {state?.errors?.firstName && <p className='text-sm text-red-500'>{state.errors.firstName}</p>} */}
+                    {errors?.firstName && <p className='text-sm text-red-500'>{errors.firstName}</p>}
                   </div>
                 </div>
 
                 <div className="w-full">
                   <div className="relative w-full min-w-[200px] h-10">
-                    <input id="lastName" value={lastName}
-                      onChange={(e) => setLastName(e.target.value)} name="lastName"
+                    <input id="lastName" value={formData.lastName} onChange={handleChange} name="lastName"
                       className="
                       peer w-full h-full bg-transparent
                       text-blue-gray-700 font-sans font-normal outline outline-0
@@ -117,7 +115,7 @@ export default function SignupPage() {
                         className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
                       Lastname
                     </label>
-                    {/* {state?.errors?.lastName && <p className='text-sm text-red-500'>{state.errors.lastName}</p>} */}
+                    {errors?.lastName && <p className='text-sm text-red-500'>{errors.lastName}</p>}
                   </div>
                 </div>
 
@@ -125,8 +123,7 @@ export default function SignupPage() {
 
                 <div className="w-full">
                   <div className="relative w-full min-w-[200px] h-10">
-                    <input id="email" value={email}
-                      onChange={(e) => setEmail(e.target.value)} name="email"
+                    <input id="email" value={formData.email} onChange={handleChange} name="email"
                       type="email"
                       className="
                         peer w-full h-full bg-transparent
@@ -143,7 +140,7 @@ export default function SignupPage() {
                       Email
                     </label>
 
-                    {/* {state?.errors?.email && <p className='text-sm text-red-500'>{state.errors.email}</p>} */}
+                    {errors?.email && <p className='text-sm text-red-500'>{errors.email}</p>}
                   </div>
                 </div>
 
@@ -151,8 +148,7 @@ export default function SignupPage() {
                   <div className="relative w-full min-w-[200px] ">
                     <div className="relative w-full min-w-[200px] ">
                     <input
-                      id="password" value={password}
-                      onChange={(e) => setPassword(e.target.value)} name="password"
+                      id="password" value={formData.password} onChange={handleChange} name="password"
                       type={showPassword ? "text" : "password"} 
                       className="
                       peer w-full h-full bg-transparent
@@ -176,17 +172,17 @@ export default function SignupPage() {
                       {showPassword ? '🙈' : '👁️'}
                     </button>
                     </div>
-{/* 
-                    {state?.errors?.password && (
+
+                    {errors?.password && (
                         <div className='text-sm text-red-500'>
                           <p className='text-sm text-red-500'>Password must:</p>
                           <ul>
-                            {state.errors.password.map((error) => (
+                            {errors.password.map((error) => (
                               <li key={error}>- {error}</li>
                             ))}
                           </ul>
                         </div>
-                      )}                     */}
+                      )}                    
                   </div>
                 </div>
 

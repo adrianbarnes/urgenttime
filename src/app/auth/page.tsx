@@ -6,46 +6,49 @@ import { signIn } from "next-auth/react";
 import SubmitButton from "@/app/components/submit";
 import { useState } from "react";
 import { LoginFormSchema } from "../lib/definitions";
+import { toast } from "react-toastify";
 
 
 export default function LoginPage() {
-  //const [state, setState] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<{} | string | null |undefined>(null);  
+  const [formData, setFormData] = useState<{ email: string; password: string }>({
+    email: '',
+    password: '',
+  });
+  const [errors, setErrors] = useState<Record<string , string[]>>({});
 
-  const handleSubmit = async (e) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
    
     e.preventDefault();
 
     try {
-      const validatedFields = LoginFormSchema.safeParse({
-        email: email,
-        password: password,
-      });   
+      
+      const validatedFields = LoginFormSchema.safeParse(formData);
       
       if (!validatedFields.success) {
-        setErrors(
-          validatedFields.error.flatten().fieldErrors
-        )
-
+        setErrors(validatedFields.error.flatten().fieldErrors)
         return;
       }      
 
+      const {email, password} = formData;
+
       const result = await signIn('credentials', {
-        email,
-        password
+        email: email,
+        password: password
       });
 
       if (!result?.error) {
-        setErrors(result?.error);
+        toast.error(result?.error)
       } 
     } catch (error) {
-      console.log("error " + error)
-      setErrors(error);
-      // setErrors(error.errors.map((err) => err.message));
+      console.log("error login", error)
+      toast.error("Whoops!. It is not you it is us. Retry again")
+
     }
   };  
 
@@ -60,8 +63,7 @@ export default function LoginPage() {
               <form className="space-y-5 md:space-y-6" onSubmit={handleSubmit}>
                 <div className="w-full">
                   <div className="relative w-full min-w-[200px] h-10">
-                    <input id="email" value={email}
-                    onChange={(e) => setEmail(e.target.value)} name="email"
+                    <input id="email" value={formData.email} onChange={handleChange} name="email"
                       className="peer w-full h-full bg-transparent text-blue-gray-700
                       font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all
                       placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200
@@ -72,15 +74,14 @@ export default function LoginPage() {
                         className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
                       Username
                     </label>
-                    {/* {state?.errors?.email && <p className='text-sm text-red-500'>{state.errors.email}</p>} */}
+                    {errors?.email && <p className='text-sm text-red-500'>{errors.email}</p>}
                   </div>
                 </div>
 
                 <div className="w-full">
                   <div className="relative w-full min-w-[200px] h-10">
                     <input
-                      id="password" value={password}
-                      onChange={(e) => setPassword(e.target.value)} name="password"
+                      id="password" value={formData.password} onChange={handleChange} name="password"
                       type={showPassword ? "text" : "password"} 
                       className="peer w-full h-full bg-transparent text-blue-gray-700
                       font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all
@@ -92,7 +93,7 @@ export default function LoginPage() {
                         className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
                       Password
                     </label>
-                    {/* {state?.errors?.password && <p className='text-sm text-red-500'>{state.errors.password}</p>} */}
+                    {errors?.password && <p className='text-sm text-red-500'>{errors.password}</p>}
 
                     <button
                       type="button"
