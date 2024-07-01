@@ -8,6 +8,8 @@ import Call from '@/models/call';
 import { Channel } from 'pusher-js';
 import {CallStatus, findEnumFromValue, formatEnumValue} from '@/enum/callStatus';
 import { toast } from 'react-toastify';
+import { User } from 'next-auth';
+import { useSession } from 'next-auth/react';
 
 type ConnectionTabProps = {
     peerInstance: Peer | null,
@@ -96,6 +98,10 @@ type ConnectionTabProps = {
       }
     };
 
+    const { data: session, status } = useSession();
+
+    const user: User | undefined = session?.user;     
+
     useEffect(() => {
 
       channel?.bind('callStatus', (data: any) => {
@@ -107,7 +113,7 @@ type ConnectionTabProps = {
 
       });    
 
-      channel?.bind('callClose', (data: any) => {
+      channel?.bind('callClose', async (data: any) => {
         toast.info("Call has been ended", {
          // position: "top-center",
           autoClose: 5000,
@@ -116,6 +122,7 @@ type ConnectionTabProps = {
         
         if(currentCall){
 
+          currentCall.endedAt = new Date().toISOString();
           currentCall.status = CallStatus.CALL_TERMINATED;
           
           updateCall(currentCall)
@@ -181,7 +188,11 @@ type ConnectionTabProps = {
                   
               </ul>
           </div>
-        </div>  )}    
+        </div>  )}   
+
+        {status === "unauthenticated" && (
+          <p className='text-sm text-gray my-4'>If you are the host, sign in to control the call</p>
+        )}          
 
         <EndCallButton
             className="w-full text-white bg-indian-yellow hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-3 text-center"

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import UserAvatar from "../components/userAvatar";
 
 export default function AuthLayout({
   children,
@@ -21,17 +22,7 @@ export default function AuthLayout({
             </a>
           </div>
         </div>
-        <div className="flex items-center">
-          <Link href="#">
-            <Image
-              src="/avatar.svg"
-              alt="User Avatar"
-              className="h-8 w-8 rounded-full mr-4" 
-              width={32}
-              height={31}
-            />
-          </Link>
-        </div>
+        <UserAvatar/>
       </nav>
       {children}
     </div>

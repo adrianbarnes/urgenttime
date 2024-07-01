@@ -12,7 +12,7 @@ import { Channel } from 'pusher-js';
 import { CallStatus, formatEnumValue } from '@/enum/callStatus';
 import CameraPermission from '@/app/components/video/cameraPermission';
 import { useSession } from 'next-auth/react';
-
+import { User } from 'next-auth';
 
 
 export default function JoinPage({ params }: { params: { id: string } }) {
@@ -32,14 +32,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
 
   const { data: session } = useSession();
 
-  console.log("session " +session);
-
-  const user = session?.user; 
-
-//   React.useEffect(() => {
-//     console.log("log session " +session);
-   
-// }, [session]);
+  const user: User | undefined = session?.user; 
   
   const triggerCallStatus = async (callStatus: string) => {
     try {
@@ -108,7 +101,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
 
   // Query the database for the call with the matching meetingId
   useEffect(() => {
-
+   
     if (meetingId && user) {
       db.call.where('meetingId').equals(meetingId).toArray().then((calls) => {
         if (calls.length > 0) {
@@ -123,7 +116,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
       });
     }
     
-  }, [meetingId]);  
+  }, [user]);  
 
 
   // update call

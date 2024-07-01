@@ -23,7 +23,7 @@ lastName: z
  
 export const LoginFormSchema = z.object({
    
-    email: z.string().min(1, { message: 'Enter a valid email' }).trim(),
+  email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
     password: z
       .string()
       .min(1, { message: 'Please enter a valid password.' })

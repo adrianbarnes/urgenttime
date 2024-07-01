@@ -4,6 +4,7 @@ import VideoFeed from '@/app/components/video/videoFeed';
 import Call from '@/models/call';
 import { Channel } from 'pusher-js';
 import { useSession } from 'next-auth/react';
+import { User } from 'next-auth';
 interface VideoCallProps {
     meetingId: string;
     handlePeerInstance: any;
@@ -22,7 +23,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, channel, handlePeerIns
 
   const { data: session } = useSession();
 
-  const user = session?.user; 
+  const user: User | undefined = session?.user; 
 
   const triggerMeetingId = async (myUniqueId: string) => {
     try {
@@ -155,7 +156,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, channel, handlePeerIns
 
   return (
       <div className='relative w-full'>
-      <VideoFeed peerInstance={peerInstance} idToCall={idToCall} triggerCallStatus={triggerCallStatus} updateCall={updateCall} currentCall={currentCall} />
+      <VideoFeed peerInstance={peerInstance} idToCall={idToCall} user={user} triggerCallStatus={triggerCallStatus} updateCall={updateCall} currentCall={currentCall} />
     </div>
   );
 };

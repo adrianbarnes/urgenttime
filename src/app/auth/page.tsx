@@ -63,7 +63,7 @@ export default function LoginPage() {
               <form className="space-y-5 md:space-y-6" onSubmit={handleSubmit}>
                 <div className="w-full">
                   <div className="relative w-full min-w-[200px] h-10">
-                    <input id="email" value={formData.email} onChange={handleChange} name="email"
+                    <input id="email" type="email" value={formData.email} onChange={handleChange} name="email"
                       className="peer w-full h-full bg-transparent text-blue-gray-700
                       font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all
                       placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200

@@ -6,6 +6,7 @@ import { CallStatus, formatEnumValue } from '@/enum/callStatus';
 import Call from '@/models/call';
 import VideoCtrl from '@/app/components/video/videoCtrl';
 import { useSession } from 'next-auth/react';
+import { User } from 'next-auth';
 
 type VideoFeedProps = {
   peerInstance: Peer | null,
@@ -13,10 +14,11 @@ type VideoFeedProps = {
   triggerCallStatus: any,
   updateCall: any,
   currentCall: Call | null;
+  user: User | undefined;
   
 }
 
-const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCallStatus, updateCall, currentCall }) => {
+const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCallStatus, updateCall, currentCall, user }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const callingVideoRef = useRef<HTMLVideoElement>(null);
   const [receivedFeed, setReceivedFeed] = useState(false);
@@ -28,10 +30,6 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
   const updateVideoConstraints = (newConstraints: any) => {
     setLegAVideoConstraints(newConstraints);
   };  
-
-  const { data: session } = useSession();
-
-  const user = session?.user; 
 
   const startStream = async (mediaStream: MediaStream | null) => {
     if (mediaStream) {
