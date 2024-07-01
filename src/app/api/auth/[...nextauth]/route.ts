@@ -1,5 +1,6 @@
 
-import { authConfig } from "@/app/actions/googleAuth";
+
+import { authConfig } from "@/app/actions/auth";
 import NextAuth from "next-auth/next";
 
 const handler = NextAuth(authConfig);

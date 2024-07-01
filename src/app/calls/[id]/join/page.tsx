@@ -4,7 +4,6 @@ import ConnectionTab from '@/app/components/video/connectionTab';
 import VideoCall from '@/app/components/video/videocall';
 import { db } from '@/app/lib/dexieDB';
 import Call from '@/models/call';
-import { useSearchParams } from 'next/navigation';
 import Peer from 'peerjs';
 import React from 'react';
 import { useEffect, useState } from 'react';
@@ -12,12 +11,11 @@ import { pusherClient } from '@/app/lib/pusher/pusherClient';
 import { Channel } from 'pusher-js';
 import { CallStatus, formatEnumValue } from '@/enum/callStatus';
 import CameraPermission from '@/app/components/video/cameraPermission';
+import { useSession } from 'next-auth/react';
+
+
 
 export default function JoinPage({ params }: { params: { id: string } }) {
-
-  const searchParams = useSearchParams()
- 
-  const isCaller = searchParams.get('is_caller') === 'true';
 
   const [peerInstance, setPeerInstance] = useState<Peer | null>(null);
   const [currentCall, setCurrentCall] = useState<Call | null>(null);
@@ -32,6 +30,16 @@ export default function JoinPage({ params }: { params: { id: string } }) {
     setPeerInstance(peer);
   };  
 
+  const { data: session } = useSession();
+
+  console.log("session " +session);
+
+  const user = session?.user; 
+
+//   React.useEffect(() => {
+//     console.log("log session " +session);
+   
+// }, [session]);
   
   const triggerCallStatus = async (callStatus: string) => {
     try {
@@ -83,7 +91,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
 
     setChannel(channel);
     
-    if(!isCaller){
+    if(!user){
       triggerCallStatus(formatEnumValue(CallStatus.RECIPIENT_CLICKED_ON_LINK));
     }
     
@@ -101,7 +109,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
   // Query the database for the call with the matching meetingId
   useEffect(() => {
 
-    if (meetingId && isCaller) {
+    if (meetingId && user) {
       db.call.where('meetingId').equals(meetingId).toArray().then((calls) => {
         if (calls.length > 0) {
           // Call with matching meetingId found
@@ -120,7 +128,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
 
   // update call
   const updateCall = React.useCallback(async (activeCall: Call) => {
-    if (isCaller) {
+    if (user) {
       await db.call.put(activeCall);
       setCurrentCall(activeCall);
     }
@@ -128,59 +136,58 @@ export default function JoinPage({ params }: { params: { id: string } }) {
 
   return (
     
-  <main className="flex min-h-screen flex-col items-center justify-between">
-    <div className="container mx-auto mt-14">
-      <div className="flex flex-col md:flex-row w-full h-full">
-        
-        {!isPermissionGranted && (
-        <div className="w-full md:w-3/5 bg-white rounded-l-lg">
-        <CameraPermission
-          onPermissionGranted={() => {
-            
-            if(!isCaller){
-              triggerCallStatus(formatEnumValue(CallStatus.CONTACT_ACCEPTED_ACCESS_To_CAMERA));
-            }  
-            
-            setIsPermissionGranted(true);
-          }}
-        />
-
-        </div>
-      )}
-      {isPermissionGranted &&   
-      <div className="w-full md:w-3/5 bg-black rounded-l-lg">        
-          <VideoCall
-          meetingId={meetingId}
-          currentCall={currentCall}
-          triggerCallStatus={triggerCallStatus}
-          channel={channel}
-          handlePeerInstance={handlePeerInstance}
-          updateCall={updateCall}
-          isCaller={isCaller}/> 
-           </div>
-          }
-
-          {!isPermissionGranted && ( 
-            <div className="w-full md:w-2/5 bg-dark-blue rounded-r-lg"></div>
-          )}
-
-          {isPermissionGranted && 
-            <div className="w-full md:w-2/5 bg-white rounded-r-lg">
-              <div className='w-3/5 mx-auto'>
+    <main className="flex min-h-screen flex-col items-center justify-between">
+      <div className="container mx-auto mt-14">
+        <div className="flex flex-col md:flex-row w-full h-full">
+          
+          {!isPermissionGranted && (
+          <div className="w-full md:w-3/5 bg-white rounded-l-lg">
+          <CameraPermission
+            onPermissionGranted={() => {
               
-                <ConnectionTab
-                  currentCall={currentCall}
-                  updateCall={updateCall}
-                  channel={channel}
-                  triggerCallDisconnect={triggerCallDisconnect}
-                  peerInstance={peerInstance}/>
+              if(!user){
+                triggerCallStatus(formatEnumValue(CallStatus.CONTACT_ACCEPTED_ACCESS_To_CAMERA));
+              }  
               
-              </div>
+              setIsPermissionGranted(true);
+            }}
+          />
+
+          </div>
+        )}
+        {isPermissionGranted &&   
+        <div className="w-full md:w-3/5 bg-black rounded-l-lg">        
+            <VideoCall
+            meetingId={meetingId}
+            currentCall={currentCall}
+            triggerCallStatus={triggerCallStatus}
+            channel={channel}
+            handlePeerInstance={handlePeerInstance}
+            updateCall={updateCall}/> 
             </div>
-        }
+            }
+
+            {!isPermissionGranted && ( 
+              <div className="w-full md:w-2/5 bg-dark-blue rounded-r-lg"></div>
+            )}
+
+            {isPermissionGranted && 
+              <div className="w-full md:w-2/5 bg-white rounded-r-lg">
+                <div className='w-3/5 mx-auto'>
+                
+                  <ConnectionTab
+                    currentCall={currentCall}
+                    updateCall={updateCall}
+                    channel={channel}
+                    triggerCallDisconnect={triggerCallDisconnect}
+                    peerInstance={peerInstance}/>
+                
+                </div>
+              </div>
+          }
+        </div>
       </div>
-    </div>
-  </main>
+    </main>
 
   );
 }

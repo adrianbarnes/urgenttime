@@ -5,18 +5,18 @@ import Peer from 'peerjs';
 import { CallStatus, formatEnumValue } from '@/enum/callStatus';
 import Call from '@/models/call';
 import VideoCtrl from '@/app/components/video/videoCtrl';
+import { useSession } from 'next-auth/react';
 
 type VideoFeedProps = {
   peerInstance: Peer | null,
   idToCall: string,
   triggerCallStatus: any,
-  isCaller: boolean,
   updateCall: any,
   currentCall: Call | null;
   
 }
 
-const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCallStatus, isCaller, updateCall, currentCall }) => {
+const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCallStatus, updateCall, currentCall }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const callingVideoRef = useRef<HTMLVideoElement>(null);
   const [receivedFeed, setReceivedFeed] = useState(false);
@@ -28,6 +28,10 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
   const updateVideoConstraints = (newConstraints: any) => {
     setLegAVideoConstraints(newConstraints);
   };  
+
+  const { data: session } = useSession();
+
+  const user = session?.user; 
 
   const startStream = async (mediaStream: MediaStream | null) => {
     if (mediaStream) {
@@ -61,7 +65,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
           // Replace the video track being sent to the peer using the peerConnection
           call.peerConnection.getSenders()[0].replaceTrack(videoTrack);
 
-          if(!isCaller){
+          if(!user){
             triggerCallStatus(formatEnumValue(CallStatus.CALL_CONNECTED));
           }          
           

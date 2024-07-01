@@ -1,18 +1,72 @@
 'use client'
  
-import { signup } from '@/app/actions/signup'
 import SubmitButton from '@/app/components/submit';
+import { SignupFormSchema } from '@/app/lib/definitions';
 import { signIn } from 'next-auth/react';
 
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
 
 export default function SignupPage() {
-  const [state, action] = useFormState(signup, undefined);
+
   const [showPassword, setShowPassword] = useState(false);
-  
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');  
+  const [errors, setErrors] = useState<{} | string | null |undefined>(null);  
+
+  const handleSubmit = async (e) => {
+   
+    e.preventDefault();
+
+    try {
+      const validatedFields = SignupFormSchema.safeParse({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+      });   
+
+      console.log("creating To account");
+      
+      if (!validatedFields.success) {
+        setErrors(
+          validatedFields.error.flatten().fieldErrors
+        )
+
+        console.log("errors", validatedFields.error.flatten().fieldErrors);
+
+        return;
+      }    
+      
+      
+
+      const result = await signIn('credentials', {
+        email,
+        password
+      });
+
+      if (!result?.error) {
+        setErrors(result?.error);
+        return;
+      } 
+
+      await signIn("credentials", {
+        email: email,
+        password: password,
+        //redirect: true,
+      })
+
+    } catch (error) {
+      console.log("error " + error)
+      setErrors(error);
+      // setErrors(error.errors.map((err) => err.message));
+    }
+  };  
+
   return (
     <main className="flex min-h-screen flex-col items-center md:items-end md:justify-end md:-mt-14 md:ml-10 mt-5">
         <div className="flex md:w-7/12 w-full justify-center md:h-screen md:bg-white bg-transparent md:rounded-lg md:shadow-xl md:shadow-blue items-center md:px-0 px-6 md:py-0 py-8 md:mx-0 mx-auto">
@@ -21,11 +75,12 @@ export default function SignupPage() {
               <h1 className="text-xl mb-5 font-bold leading-tight tracking-tight text-gray-700 md:text-2xl text-dark-blue">
                 Create Account
               </h1>
-              <form className="space-y-5 md:space-y-6" action={action}>
+              <form className="space-y-5 md:space-y-6" onSubmit={handleSubmit}>
                 <div className="flex-1 md:flex md:gap-4 md:space-y-0 space-y-5">
                  <div className="w-full">
                   <div className="relative w-full min-w-[200px] h-10">
-                    <input id="firstName" name="firstName"
+                    <input id="firstName" value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)} name="firstName"
                       className="
                       peer w-full h-full bg-transparent
                       text-blue-gray-700 font-sans font-normal outline outline-0
@@ -40,13 +95,14 @@ export default function SignupPage() {
                         className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
                       Firstname
                     </label>
-                    {state?.errors?.firstName && <p className='text-sm text-red-500'>{state.errors.firstName}</p>}
+                    {/* {state?.errors?.firstName && <p className='text-sm text-red-500'>{state.errors.firstName}</p>} */}
                   </div>
                 </div>
 
                 <div className="w-full">
                   <div className="relative w-full min-w-[200px] h-10">
-                    <input id="lastName" name="lastName"
+                    <input id="lastName" value={lastName}
+                      onChange={(e) => setLastName(e.target.value)} name="lastName"
                       className="
                       peer w-full h-full bg-transparent
                       text-blue-gray-700 font-sans font-normal outline outline-0
@@ -61,7 +117,7 @@ export default function SignupPage() {
                         className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-gray-500 peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
                       Lastname
                     </label>
-                    {state?.errors?.lastName && <p className='text-sm text-red-500'>{state.errors.lastName}</p>}
+                    {/* {state?.errors?.lastName && <p className='text-sm text-red-500'>{state.errors.lastName}</p>} */}
                   </div>
                 </div>
 
@@ -69,7 +125,8 @@ export default function SignupPage() {
 
                 <div className="w-full">
                   <div className="relative w-full min-w-[200px] h-10">
-                    <input id="email" name="email"
+                    <input id="email" value={email}
+                      onChange={(e) => setEmail(e.target.value)} name="email"
                       type="email"
                       className="
                         peer w-full h-full bg-transparent
@@ -86,7 +143,7 @@ export default function SignupPage() {
                       Email
                     </label>
 
-                    {state?.errors?.email && <p className='text-sm text-red-500'>{state.errors.email}</p>}
+                    {/* {state?.errors?.email && <p className='text-sm text-red-500'>{state.errors.email}</p>} */}
                   </div>
                 </div>
 
@@ -94,7 +151,8 @@ export default function SignupPage() {
                   <div className="relative w-full min-w-[200px] ">
                     <div className="relative w-full min-w-[200px] ">
                     <input
-                      id="password" name="password"
+                      id="password" value={password}
+                      onChange={(e) => setPassword(e.target.value)} name="password"
                       type={showPassword ? "text" : "password"} 
                       className="
                       peer w-full h-full bg-transparent
@@ -118,7 +176,7 @@ export default function SignupPage() {
                       {showPassword ? '🙈' : '👁️'}
                     </button>
                     </div>
-
+{/* 
                     {state?.errors?.password && (
                         <div className='text-sm text-red-500'>
                           <p className='text-sm text-red-500'>Password must:</p>
@@ -128,7 +186,7 @@ export default function SignupPage() {
                             ))}
                           </ul>
                         </div>
-                      )}                    
+                      )}                     */}
                   </div>
                 </div>
 

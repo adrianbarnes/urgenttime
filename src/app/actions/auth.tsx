@@ -1,36 +1,81 @@
-'use server'
+import NextAuth, { NextAuthOptions, getServerSession } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import { generateRandomString } from "../lib/utils";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-import { redirect } from "next/navigation";
-import { FormState, LoginFormSchema } from "@/app/lib/definitions";
-import { createSession } from "@/app/lib/session";
-import { generateRandomString } from "@/app/lib/utils";
+export const authConfig: NextAuthOptions ={
+  providers: [
+    GoogleProvider({
+        clientId: process.env.GOOGLE_ID as string,
+        clientSecret: process.env.GOOGLE_SECRET as string,
+        authorization: {
+          params: {
+            prompt: "consent",
+            access_type: "offline",
+            response_type: "code"
+          }
+        }
+      }),
+      CredentialsProvider({
+        // The name to display on the sign in form (e.g. 'Sign in with...')
+        name: "Credentials",
+        credentials: {
+          email: {},
+          password: {},
+        },
+        async authorize(credentials, req) {
+            
+            if(!credentials){
+              return null;
+            }
 
-export async function login(state: FormState, formData: FormData) {
-    // Validate form fields
-    const validatedFields = LoginFormSchema.safeParse({
-      email: formData.get('email'),
-      password: formData.get('password'),
-    })
-   
-    // If any form fields are invalid, return early
-    if (!validatedFields.success) {
-      return {
-        errors: validatedFields.error.flatten().fieldErrors,
-      }
-    }
-   
-    const { email, password } = validatedFields.data;
-
-    const id = generateRandomString(11);
-
-    const user = {
-        id: id,
-        email,
-        password
-
-    }
-
-    await createSession(user.id, user.email)
-    redirect('/calls')    
-  }
+            return {
+              id: generateRandomString(11),
+              email: credentials?.email,
+              username: credentials?.email,
+            };
   
+        },
+      }),      
+  ],
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      // You can return `false` to reject the sign-in
+      if(!user || !user.email)
+        return false;
+
+      // Handle user data (e.g., store it in a database)
+      return true;
+    },
+    async jwt({ token, account, profile }) {
+      // Persist the OAuth access_token and or the user id to the token right after signin
+      if (account) {
+        //token.accessToken = account.access_token
+        //token.id = profile.id
+      }
+      return token
+    },    
+    async session({ session, token, user }) {
+      // Send properties to the client, like an access_token and user id from a provider.
+      //session.accessToken = token.accessToken
+  
+      session.user.id = token.id
+      
+      return session
+    },
+    async redirect({url, baseUrl}) {
+      return url.startsWith(baseUrl + '/auth')
+        ? Promise.resolve(baseUrl + '/calls')
+        : Promise.resolve(url);
+    },    
+  },
+  pages: {
+    signIn: '/auth',
+  },
+  session: {
+    maxAge: 30 * 24 * 60 * 60,
+  },
+
+} ;
+
+export const getSession = () => getServerSession(authConfig);

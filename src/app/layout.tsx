@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import ToastProvider from "./components/toasterProvider";
+import SessionWrapper from "./components/sessionwrapper";
+import { getSession } from "next-auth/react";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -10,17 +12,23 @@ export const metadata: Metadata = {
   description: "urgentTime application",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+
   return (
+    
     <html lang="en">
       <body className={outfit.className}>
-      <ToastProvider>
-          {children}
-        </ToastProvider>
+      <SessionWrapper session={session}>
+        <ToastProvider>
+            {children}
+          </ToastProvider>
+
+      </SessionWrapper>
       </body>
     </html>
   );

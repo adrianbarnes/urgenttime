@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Peer from 'peerjs';
-import { pusherClient } from '@/app/lib/pusher/pusherClient';
 import VideoFeed from '@/app/components/video/videoFeed';
 import Call from '@/models/call';
 import { Channel } from 'pusher-js';
+import { useSession } from 'next-auth/react';
 interface VideoCallProps {
     meetingId: string;
-    isCaller: boolean;
     handlePeerInstance: any;
     currentCall: Call | null;
     channel: Channel | null;
@@ -14,12 +13,16 @@ interface VideoCallProps {
     updateCall: any;
   }
 
-const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, handlePeerInstance, currentCall, triggerCallStatus, updateCall }) => {
+const VideoCall: React.FC<VideoCallProps> = ({ meetingId, channel, handlePeerInstance, currentCall, triggerCallStatus, updateCall }) => {
   const [peerInstance, setPeerInstance] = useState<Peer | null>(null);
   const [myUniqueId, setMyUniqueId] = useState<string | null>(null);
   const [idToCall, setIdToCall] = useState('');
  
   const generateRandomString = () => Math.random().toString(36).substring(2);
+
+  const { data: session } = useSession();
+
+  const user = session?.user; 
 
   const triggerMeetingId = async (myUniqueId: string) => {
     try {
@@ -28,7 +31,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, han
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ myUniqueId, isCaller }),
+        body: JSON.stringify({ myUniqueId, user }),
       });
   
       if (response.ok) {
@@ -52,7 +55,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, han
 
         console.log("peer connected on " + peerId);
   
-        if(isCaller && currentCall){
+        if(user && currentCall){
           if(!currentCall.startedAt){
             currentCall.startedAt = new Date().toISOString();
           }
@@ -104,9 +107,9 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, han
         }
 
 
-        if(isCaller){
+        if(user){
             channel?.bind('legACallId', (data: any) => {
-                const { legCallId, isCaller } = data;
+                const { legCallId, user } = data;
                 console.log("Received in leg A " + legCallId)
   
 
@@ -120,9 +123,9 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, han
 
         }
 
-        if(!isCaller){
+        if(!user){
             channel?.bind('legBCallId', (data: any) => {
-                const { legCallId, isCaller } = data;
+                const { legCallId, user } = data;
                 console.log("Received in leg B " + legCallId)             
 
                 // if(idToCall != legCallId){
@@ -152,7 +155,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, isCaller, channel, han
 
   return (
       <div className='relative w-full'>
-      <VideoFeed peerInstance={peerInstance} idToCall={idToCall} isCaller={isCaller} triggerCallStatus={triggerCallStatus} updateCall={updateCall} currentCall={currentCall} />
+      <VideoFeed peerInstance={peerInstance} idToCall={idToCall} triggerCallStatus={triggerCallStatus} updateCall={updateCall} currentCall={currentCall} />
     </div>
   );
 };

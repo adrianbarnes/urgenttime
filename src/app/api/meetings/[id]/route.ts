@@ -50,17 +50,18 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     });
   }
 
-  const { myUniqueId, isCaller } = await req.json();
+  const { myUniqueId, user } = await req.json();
 
   try {
 
-    if(isCaller){
-      pusherServer.trigger(meetingId, 'legBCallId', { legCallId: myUniqueId, isCaller: isCaller });
+    if(user){
+      pusherServer.trigger(meetingId, 'legBCallId', { legCallId: myUniqueId, user: user });
     }
 
-    if(!isCaller){
-      pusherServer.trigger(meetingId, 'legACallId', { legCallId: myUniqueId, isCaller: isCaller });
+    if(!user){
+      pusherServer.trigger(meetingId, 'legACallId', { legCallId: myUniqueId, user: user });
     }
+    
     return new Response('Pusher event triggered successfully', {
       status: 200,
     })      

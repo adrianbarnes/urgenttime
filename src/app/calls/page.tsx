@@ -1,7 +1,7 @@
 'use client'
 
-import IntlTelInput from "intl-tel-input/react";
-import 'intl-tel-input/build/css/intlTelInput.css';
+//import IntlTelInput from "intl-tel-input/react";
+//import 'intl-tel-input/build/css/intlTelInput.css';
 import React, { useState, useRef, useEffect } from 'react';
 import { launchCall } from "@/app/actions/launchCall";
 import { useFormState, useFormStatus } from "react-dom";
@@ -16,9 +16,10 @@ import LatestCalls from "@/app/components/latestCalls";
 export default function CallPage() {
   const [state, action] = useFormState(launchCall, undefined)
 
-  const [phoneNumber, setNumber, ] = useState('');
-  const phoneInputRef = useRef(null);
+  // const [phoneNumber, setNumber, ] = useState('');
+  // const phoneInputRef = useRef(null);
 
+  
   const saveCall = React.useCallback(async () => {
     if(state?.success && state.call){
       await db.call.add(state.call);
@@ -36,7 +37,9 @@ export default function CallPage() {
 
       saveCall();
 
-      redirect(state?.inviteLink +"?is_caller=true")   
+      console.log(state?.inviteLink);
+
+      redirect(state?.inviteLink)   
     } else if (state?.error) {
       toast.error(state.error, {
         position: "top-right",

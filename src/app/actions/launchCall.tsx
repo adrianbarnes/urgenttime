@@ -5,9 +5,9 @@ import { sendMail } from "../lib/emailer";
 import { render } from "@react-email/components";
 import InviteEmail from "../emails/invite";
 import { generateInviteLink, generateRandomString } from "../lib/utils";
-import { getUser } from "../lib/dal";
 import Call from "@/models/call";
 import { CallStatus } from "@/enum/callStatus";
+import { getSession } from "./auth";
 
 export async function launchCall(state: FormState, formData: FormData) {
     // Validate form fields
@@ -28,12 +28,17 @@ export async function launchCall(state: FormState, formData: FormData) {
 
     const meetLink = generateRandomString(10);
 
+    const session = await getSession();
+
+    const user = session?.user;
+
+    const senderEmail = user?.email as string;
+
+    const userId =  user?.id as string;
+
     const inviteLink = generateInviteLink(meetLink);
-    const user = await getUser();
-    const username = user?.username as string;
 
-
-    const html = render(<InviteEmail userName={username} inviteLink={inviteLink}/>,
+    const html = render(<InviteEmail userName={senderEmail} inviteLink={inviteLink}/>,
     {
         pretty: true,
     })
@@ -45,7 +50,7 @@ export async function launchCall(state: FormState, formData: FormData) {
 
         const call: Call = {
           meetingId: meetLink,
-          userId: user?.id as string,
+          userId: userId,
           email: email,
           status: CallStatus.LINK_SENT,
           createdAt: timeStamp,
