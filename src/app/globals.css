@@ -26,6 +26,8 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -66,10 +68,16 @@ body {
    .iti {
     width: 100%;
    }
+
+   
 }
 
 @layer components {
   input.iti__tel-input {
     width: 100%;
    } 
+
+   /* .custom-input {
+    @apply block px-2 w-full h-full text-sm text-gray-700 font-sans font-normal bg-transparent rounded-lg border border-dark-blue appearance-none focus:outline-none focus:ring-0 focus:border-dark-blue peer;
+  } */
 }
