@@ -88,12 +88,34 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, channel, handlePeerIns
           
             peer = new Peer(myUniqueId,{
               config: {'iceServers': [
-              
-                { url: "stun:stun.l.google.com:19302" },
-                { url: "stun:stun1.l.google.com:19302" },
-                { url: "stun:stun2.l.google.com:19302" },
-                { url: "stun:stun3.l.google.com:19302" },
-                { url: "stun:stun4.l.google.com:19302" },
+                {
+                  urls: "stun:stun.relay.metered.ca:80",
+                },
+                {
+                  urls: "turn:global.relay.metered.ca:80",
+                  username: "84f5ac65de36e515412d9f0b",
+                  credential: "wovZTDn6KsXNeXOl",
+                },
+                {
+                  urls: "turn:global.relay.metered.ca:80?transport=tcp",
+                  username: "84f5ac65de36e515412d9f0b",
+                  credential: "wovZTDn6KsXNeXOl",
+                },
+                {
+                  urls: "turn:global.relay.metered.ca:443",
+                  username: "84f5ac65de36e515412d9f0b",
+                  credential: "wovZTDn6KsXNeXOl",
+                },
+                {
+                  urls: "turns:global.relay.metered.ca:443?transport=tcp",
+                  username: "84f5ac65de36e515412d9f0b",
+                  credential: "wovZTDn6KsXNeXOl",
+                },              
+                // { url: "stun:stun.l.google.com:19302" },
+                // { url: "stun:stun1.l.google.com:19302" },
+                // { url: "stun:stun2.l.google.com:19302" },
+                // { url: "stun:stun3.l.google.com:19302" },
+                // { url: "stun:stun4.l.google.com:19302" },
               ]}
             });
 
