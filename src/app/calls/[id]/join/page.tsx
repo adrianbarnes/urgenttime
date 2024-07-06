@@ -13,6 +13,7 @@ import { CallStatus, formatEnumValue } from '@/enum/callStatus';
 import CameraPermission from '@/app/components/video/cameraPermission';
 import { useSession } from 'next-auth/react';
 import { User } from 'next-auth';
+import { useSearchParams } from 'next/navigation';
 
 
 export default function JoinPage({ params }: { params: { id: string } }) {
@@ -32,7 +33,11 @@ export default function JoinPage({ params }: { params: { id: string } }) {
 
   const { data: session } = useSession();
 
-  const user: User | undefined = session?.user; 
+  //const user: User | undefined = session?.user; 
+
+  const searchParams = useSearchParams();
+
+  const user = searchParams.get('is_caller') === 'true';
   
   const triggerCallStatus = async (callStatus: string) => {
     try {

@@ -5,6 +5,7 @@ import Call from '@/models/call';
 import { Channel } from 'pusher-js';
 import { useSession } from 'next-auth/react';
 import { User } from 'next-auth';
+import { useSearchParams } from 'next/navigation';
 interface VideoCallProps {
     meetingId: string;
     handlePeerInstance: any;
@@ -23,7 +24,11 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, channel, handlePeerIns
 
   const { data: session } = useSession();
 
-  const user: User | undefined = session?.user; 
+  //const user: User | undefined = session?.user; 
+
+  const searchParams = useSearchParams();
+
+  const user = searchParams.get('is_caller') === 'true';  
 
   const triggerMeetingId = async (myUniqueId: string) => {
     try {
