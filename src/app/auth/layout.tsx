@@ -6,10 +6,11 @@ export default function AuthLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="w-full">
-      <nav className="flex items-center justify-between mt-4">
-        <div className="ml-8">
-          <div className="flex items-center">
+    <div className="w-full relative">
+      <nav className="flex items-center justify-between p-4">
+      <div className="container mx-auto md:py-4">
+        <div className="flex w-full">
+          <div className="flex items-center mr-auto">
 
             <a href="#">
               <Image src="/logo.svg" alt="Urgenttime Logo"
@@ -19,6 +20,7 @@ export default function AuthLayout({
               />
             </a>
           </div>
+        </div>
         </div>
       </nav>
       {children}

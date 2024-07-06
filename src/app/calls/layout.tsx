@@ -9,9 +9,10 @@ export default function AuthLayout({
 }) {
   return (
     <div className="w-full">
-      <nav className="flex items-center justify-between bg-white p-4 sm:px-3">
-        <div className="ml-8 md:p-4">
-          <div className="flex items-center">
+      <nav className="flex items-center justify-between bg-white p-4">
+        <div className="container mx-auto md:py-4">
+        <div className="flex w-full">
+          <div className="flex items-center mr-auto">
 
             <a href="#">
               <Image src="/logo.svg" alt="Urgenttime Logo"
@@ -21,8 +22,10 @@ export default function AuthLayout({
               />
             </a>
           </div>
-        </div>
+
         <UserAvatar/>
+        </div>
+        </div>
       </nav>
       {children}
     </div>

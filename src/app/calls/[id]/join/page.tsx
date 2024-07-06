@@ -129,12 +129,12 @@ export default function JoinPage({ params }: { params: { id: string } }) {
 
   return (
     
-    <main className="flex min-h-screen flex-col items-center justify-between">
+    <main className="flex min-h-screen flex-col items-center justify-between p-4">
       <div className="container mx-auto mt-14">
         <div className="flex flex-col md:flex-row w-full h-full">
           
           {!isPermissionGranted && (
-          <div className="w-full md:w-3/5 bg-white rounded-l-lg">
+          <div className="w-full md:w-3/5 bg-white rounded-l-lg md:rounded-r-none rounded-r-lg">
           <CameraPermission
             onPermissionGranted={() => {
               
@@ -149,7 +149,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
           </div>
         )}
         {isPermissionGranted &&   
-        <div className="w-full md:w-3/5 bg-black rounded-l-lg">        
+        <div className="w-full md:w-3/5 bg-black rounded-l-lg md:rounded-r-none rounded-r-lg">        
             <VideoCall
             meetingId={meetingId}
             currentCall={currentCall}
@@ -161,11 +161,11 @@ export default function JoinPage({ params }: { params: { id: string } }) {
             }
 
             {!isPermissionGranted && ( 
-              <div className="w-full md:w-2/5 bg-dark-blue rounded-r-lg"></div>
+              <div className="w-full md:w-2/5 bg-dark-blue rounded-r-lg md:rounded-l-none rounded-l-lg"></div>
             )}
 
             {isPermissionGranted && 
-              <div className="w-full md:w-2/5 bg-white rounded-r-lg">
+              <div className="w-full md:w-2/5 bg-white rounded-r-lg md:rounded-l-none rounded-l-lg">
                 <div className='w-3/5 mx-auto'>
                 
                   <ConnectionTab

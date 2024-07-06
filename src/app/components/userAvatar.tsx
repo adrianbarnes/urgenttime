@@ -44,7 +44,7 @@ const UserAvatar = () => {
         <Image
           src="/avatar.svg"
           alt="User Avatar"
-          className="h-8 w-8 rounded-full mr-4" 
+          className="h-8 w-8 rounded-full" 
           width={32}
           height={31}
           aria-expanded={isOpen}
