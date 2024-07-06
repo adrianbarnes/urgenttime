@@ -29,8 +29,8 @@ const CallHistory: FC = () => {
   const LatestCalls = () => {
     
     return callList && callList.length > 0 ?  (
-      <div className="w-full p-4 mx-auto bg-white pb-8 rounded-2xl shadow-lg shadow-black-500/50">
-        <table className="table-auto border-collapse text-gray-500 w-full">
+      <div className="overflow-x-auto w-full p-4 mx-auto bg-white pb-8 rounded-2xl shadow-lg shadow-black-500/50">
+        <table className="table-auto border-collapse text-gray-500 min-w-full">
           <thead className="text-left">
             <tr>
               <th className="text-dark-blue text-md p-2">Meeting Link</th>
@@ -88,7 +88,7 @@ const CallHistory: FC = () => {
       <div >
 
         <h2 className="text-md my-4 ml-3 font-bold leading-tight tracking-tight text-gray-700 md:text-2md text-dark-blue">Latest Calls</h2>
-        <div><LatestCalls /></div>
+        <LatestCalls />
       </div>
     </div>
   );

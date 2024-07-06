@@ -68,7 +68,8 @@ export default function SignupPage() {
   };  
 
   return (
-    <main className="flex min-h-screen flex-col items-center md:items-end md:justify-end md:-mt-14 md:ml-10 mt-5">
+    <main className="w-full md:absolute top-0 right-0">
+      <div className="flex min-h-screen flex-col items-center md:items-end md:justify-end">
         <div className="flex md:w-7/12 w-full justify-center md:h-screen md:bg-white bg-transparent md:rounded-lg md:shadow-xl md:shadow-blue items-center md:px-0 px-6 md:py-0 py-8 md:mx-0 mx-auto">
           <div className="md:w-10/12 w-full bg-white md:bg-transparent sm:rounded-lg sm:shadow-xl sm:shadow-blue md:ml-auto md:mt-0 xl:p-0">
             <div className="p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
@@ -207,7 +208,7 @@ export default function SignupPage() {
                   </p>
                 </div>
                 <div className="flex items-center justify-center">
-                  <button onClick={() => signIn("google")} className="w-3/5 px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
+                  <button onClick={() => signIn("google")} className="md:w-3/5 w-full px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
                     <Image className="w-6 h-6"
                       src="/google-logo.svg"
                       loading="lazy" alt="google logo"
@@ -219,6 +220,7 @@ export default function SignupPage() {
                 </div>
             </div>
           </div>
+        </div>
         </div>
     </main>
   );

@@ -49,10 +49,10 @@ export default function CallPage() {
   }, [state?.success, state?.error]);  
 
   return (
-    <main className="flex flex-col items-center justify-between">
+    <main className="flex flex-col items-center justify-between p-4">
       <div className="container mx-auto mt-14">
         <div className="flex w-full mx-auto">
-          <div className="w-full md:w-3/5 p-4 mx-auto bg-white rounded-l-lg rounded-l-none sm:rounded-r-lg">
+          <div className="w-full md:w-3/5 p-4 mx-auto bg-white rounded-l-lg md:rounded-r-none rounded-r-lg">
             <div className="md:w-1/2 w-full p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl my-8 text-center font-bold leading-tight tracking-tight text-gray-700 md:text-2xl text-dark-blue">
                 Start a new call
@@ -110,7 +110,7 @@ export default function CallPage() {
               </form>
             </div>
           </div>
-          <div className="hidden sm:block w-2/5 bg-dark-blue md:rounded-r-lg rounded-l-none sm:rounded-l-lg"></div>
+          <div className="hidden sm:block w-2/5 bg-dark-blue rounded-r-lg md:rounded-l-none rounded-l-lg"></div>
         </div>
       </div>
 
