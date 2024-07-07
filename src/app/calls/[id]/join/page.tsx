@@ -125,7 +125,7 @@ export default function JoinPage({ params }: { params: { id: string } }) {
 
   return (
     
-    <main className="flex min-h-screen flex-col items-center justify-between p-4">
+    <main className="flex flex-col items-center justify-between p-4">
       <div className="container mx-auto mt-14">
         <div className="flex flex-col md:flex-row w-full h-full">
           

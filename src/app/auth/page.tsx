@@ -11,15 +11,6 @@ import { redirect } from "next/navigation";
 
 
 export default function LoginPage() {
-
-  // const { data: session, status } = useSession();
-
-  // useEffect(() => {
-  //   if (status === 'authenticated') {
-  //     redirect('calls');
-  //   }
-  // }, [status]);
-
   
   const [showPassword, setShowPassword] = useState(false);
 
@@ -64,8 +55,8 @@ export default function LoginPage() {
   };  
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
-        <div className="flex flex-col lg:w-6/12 w-full items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <main className="flex flex-col items-center justify-between">
+        <div className="flex flex-col lg:w-6/12 w-full items-center justify-center px-6 py-8 mx-auto md:py-4">
           <div className="w-full bg-white rounded-lg shadow-xl shadow-blue md:mt-0 sm:max-w-md xl:p-0">
             <div className="lg:w-8/12 p-6 mx-auto space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl mb-5 font-bold leading-tight tracking-tight text-gray-700 md:text-2xl text-dark-blue">
