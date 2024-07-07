@@ -2,14 +2,25 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import SubmitButton from "@/app/components/submit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginFormSchema } from "../lib/definitions";
 import { toast } from "react-toastify";
+import { redirect } from "next/navigation";
 
 
 export default function LoginPage() {
+
+  // const { data: session, status } = useSession();
+
+  // useEffect(() => {
+  //   if (status === 'authenticated') {
+  //     redirect('calls');
+  //   }
+  // }, [status]);
+
+  
   const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState<{ email: string; password: string }>({

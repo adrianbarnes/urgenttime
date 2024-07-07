@@ -5,9 +5,9 @@ import Image from "next/image";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { db } from '@/app/lib/dexieDB';
+import { redirect } from 'next/navigation';
 
 const UserAvatar = () => {
-  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -30,12 +30,11 @@ const UserAvatar = () => {
   const handleLogout = async () => {
     await signOut();
     await db.delete();
+    redirect('/auth')
   };
 
   return (
     <div className="flex items-center user-avatar relative inline-block">
-
-      {session ? (
         
         <div className="relative inline-block">
       <Link 
@@ -63,7 +62,6 @@ const UserAvatar = () => {
             </div>
           )}
         </div>
-      ) : null}
     </div>
   );
 };

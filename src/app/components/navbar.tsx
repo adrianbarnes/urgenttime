@@ -1,13 +1,17 @@
-import Image from "next/image";
+"use client";
 
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+import Image from "next/image";
+import Link from "next/link";
+import UserAvatar from "../components/userAvatar";
+import { useSession } from "next-auth/react";
+
+export default function Navbar() {
+
+ const { data: session } = useSession();
+    
   return (
     <div className="w-full relative">
-      <nav className="flex items-center justify-between p-4">
+       <nav className={`flex items-center justify-between p-4 ${session ? "bg-white" : ""}`}>
         <div className="container mx-auto md:py-4">
           <div className="flex w-full">
             <div className="flex items-center mr-auto">
@@ -20,10 +24,12 @@ export default function AuthLayout({
                 />
               </a>
             </div>
+            {session && (
+
+            <UserAvatar /> )}
           </div>
         </div>
       </nav>
-      {children}
     </div>
   );
 }

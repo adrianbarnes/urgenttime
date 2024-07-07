@@ -13,6 +13,7 @@ import { CallStatus, formatEnumValue } from '@/enum/callStatus';
 import CameraPermission from '@/app/components/video/cameraPermission';
 import { useSession } from 'next-auth/react';
 import { User } from 'next-auth';
+import { useLiveQuery } from 'dexie-react-hooks';
 
 export default function JoinPage({ params }: { params: { id: string } }) {
 
@@ -98,24 +99,20 @@ export default function JoinPage({ params }: { params: { id: string } }) {
     };   
   }, []);    
 
-  // Query the database for the call with the matching meetingId
-  useEffect(() => {
-   
-    if (meetingId && user) {
-      db.call.where('meetingId').equals(meetingId).toArray().then((calls) => {
-        if (calls.length > 0) {
-          // Call with matching meetingId found
-          const matchingCall = calls[0];
-          setCurrentCall(matchingCall);
-          console.log('Matching Call:', matchingCall);
-        } else {
-          // No call found with the given meetingId
-          console.log('No call found with meetingId:', meetingId);
-        }
-      });
-    }
-    
-  }, [user]);  
+  if ( user) {
+    useLiveQuery(() => 
+    db.call.where('meetingId').equals(meetingId).toArray().then((calls) => {
+      if (calls.length > 0) {
+        // Call with matching meetingId found
+        const matchingCall = calls[0];
+        setCurrentCall(matchingCall);
+        console.log('Matching Call:', matchingCall);
+      } else {
+        // No call found with the given meetingId
+        console.log('No call found with meetingId:', meetingId);
+      }
+    }));
+  }  
 
 
   // update call

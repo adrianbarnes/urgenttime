@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
-import ToastProvider from "./components/toasterProvider";
-import SessionWrapper from "./components/sessionwrapper";
-import { getSession } from "next-auth/react";
+import ToastProvider from "@/app/components/toasterProvider";
+import SessionWrapper from "@/app/components/sessionwrapper";
 import { getServerSession } from "next-auth";
+import Navbar from "@/app/components/navbar";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -26,6 +26,7 @@ export default async function RootLayout({
       <body className={outfit.className}>
       <SessionWrapper session={session}>
         <ToastProvider >
+          <Navbar/>
             {children}
           </ToastProvider>
 
