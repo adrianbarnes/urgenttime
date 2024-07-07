@@ -33,12 +33,12 @@ const CallHistory: FC = () => {
         <table className="table-auto border-collapse text-gray-500 min-w-full">
           <thead className="text-left">
             <tr>
-              <th className="text-dark-blue text-md p-2">Meeting Link</th>
-              <th className="text-dark-blue text-md p-2">Recipient</th>
-              <th className="text-dark-blue text-md p-2">Started At</th>
-              <th className="text-dark-blue text-md p-2">Ended At</th>
-              <th className="text-dark-blue text-md p-2">Duration</th>
-              <th className="text-dark-blue text-md p-2">Status</th>
+              <th className="whitespace-nowrap text-dark-blue text-md p-2">Meeting Link</th>
+              <th className="whitespace-nowrap text-dark-blue text-md p-2">Recipient</th>
+              <th className="whitespace-nowrap text-dark-blue text-md p-2">Started At</th>
+              <th className="whitespace-nowrap text-dark-blue text-md p-2">Ended At</th>
+              <th className="whitespace-nowrap text-dark-blue text-md p-2">Duration</th>
+              <th className="whitespace-nowrap text-dark-blue text-md p-2">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -67,12 +67,12 @@ const CallHistory: FC = () => {
               return (
                 <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
                     <td className={`text-sm ${i.meetingId ? 'p-2' : 'p-0'}`}><span>{i.meetingId}</span></td>
-                    <td className={`text-sm ${i.email || i.phoneNumber ? 'p-2' : 'p-0'}`}><span>{i.email ?? i.phoneNumber}</span></td>
+                    <td className={`text-sm whitespace-nowrap ${i.email || i.phoneNumber ? 'p-2' : 'p-0'}`}><span>{i.email ?? i.phoneNumber}</span></td>
                     <td className={`text-sm ${i.startedAt ? 'p-2' : 'p-0'}`}><span>{i.startedAt ? formatDateTime(moment(i.startedAt)) : ""}</span></td>
                     <td className={`text-sm ${i.endedAt ? 'p-2' : 'p-0'}`}><span>{i.endedAt ? formatDateTime(moment(i.endedAt)) : ""}</span></td>
 
                     <td className={`text-sm p-2`}><span>{duration}</span></td>
-                    <td className={`text-sm ${i.status ? 'p-2' : 'p-0'}`}><span>{i.status}</span></td>
+                    <td className={`text-sm whitespace-nowrap ${i.status ? 'p-2' : 'p-0'}`}><span>{i.status}</span></td>
                 </tr>
               )
             })
