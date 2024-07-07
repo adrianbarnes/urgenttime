@@ -14,7 +14,7 @@ type VideoFeedProps = {
   triggerCallStatus: any,
   updateCall: any,
   currentCall: Call | null;
-  user: any | undefined;
+  user: User | undefined;
   
 }
 

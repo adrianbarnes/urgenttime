@@ -24,11 +24,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, channel, handlePeerIns
 
   const { data: session } = useSession();
 
-  //const user: User | undefined = session?.user; 
-
-  const searchParams = useSearchParams();
-
-  const user = searchParams.get('is_caller') === 'true';  
+  const user: User | undefined = session?.user;
 
   const triggerMeetingId = async (myUniqueId: string) => {
     try {

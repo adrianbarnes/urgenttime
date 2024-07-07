@@ -39,7 +39,7 @@ export default function CallPage() {
 
       console.log(state?.inviteLink);
 
-      redirect(state?.inviteLink+"?is_caller=true")   
+      redirect(state?.inviteLink)   
     } else if (state?.error) {
       toast.error(state.error, {
         position: "top-right",
