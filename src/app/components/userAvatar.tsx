@@ -1,11 +1,10 @@
 "use client"
 
-import { signOut, useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
 import Image from "next/image";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { db } from '@/app/lib/dexieDB';
-import { redirect } from 'next/navigation';
 
 const UserAvatar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,9 +23,9 @@ const UserAvatar = () => {
  
 
   const handleLogout = async () => {
-    await signOut();
-    await db.delete();
-    redirect('/auth');
+    db.delete();
+    await signOut({callbackUrl: '/auth'});
+    
   };
 
   useEffect(() => {
