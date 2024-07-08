@@ -1,3 +1,4 @@
+import appConfig from '@/app/config/app';
 
 export const generateRandomString = (length: number) => {
     let result = '';
@@ -10,7 +11,7 @@ export const generateRandomString = (length: number) => {
   };
 
   export const generateInviteLink = (meetingLink: string) =>{
-    let baseUrl = process.env.APP_URL;
+    let baseUrl = appConfig.appUrl;
     let link =  baseUrl + "/calls";
 
     link+= `/${meetingLink}/join`;

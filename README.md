@@ -32,7 +32,6 @@ npm  install
 
 ```env
 APP_URL=http://localhost:3000
-SESSION_SECRET=your_secret_key
 GOOGLE_SECRET=your_google_secret
 GOOGLE_ID=your_google_id  
 MAIL_HOST=smt.local.test
@@ -46,6 +45,7 @@ PUSHER_APP_ID=your_pusher_app_id
 PUSHER_SECRET=your_pusher_secret
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_nextauth_secret
+NEXT_PUBLIC_LOCAL_STORAGE_DATABASE_NAME=database_name
 
 ```
 Replace the variables with the actual values for your environment
@@ -59,7 +59,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Environment Variables
 -  **APP_URL**: The base URL of your application.
--  **SESSION_SECRET**: A secret key for session management.
 -  **GOOGLE_SECRET**: Your Google API secret for SSO.
 -  **GOOGLE_ID**: Your Google API ID for SSO.
 -  **MAIL_HOST**: The mail server host.
@@ -73,6 +72,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 -  **PUSHER_SECRET**: Pusher secret.
 -  **NEXTAUTH_URL**: NextAuth app url.
 -  **NEXTAUTH_SECRET**: NextAuth secret. You can generate using https://generate-secret.vercel.app/32
+-  **NEXT_PUBLIC_LOCAL_STORAGE_DATABASE_NAME**: Database Name of local storage.
 
 ## Deployment
 To deploy your application, you can use platforms like Vercel, Heroku, or any other cloud service provider that supports Node.js applications.

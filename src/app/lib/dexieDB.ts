@@ -1,7 +1,8 @@
 import Call from '@/models/call';
 import Dexie, { Table } from 'dexie';
+import appConfig from '@/app/config/app';
 
-const dbName = 'urgent_time';
+const dbName = appConfig.localStorageDatabaseName;
 
 export class DB extends Dexie {
  

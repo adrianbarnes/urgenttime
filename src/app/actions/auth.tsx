@@ -1,13 +1,14 @@
 import NextAuth, { NextAuthOptions, getServerSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { generateRandomString } from "../lib/utils";
+import { generateRandomString } from "@/app/lib/utils";
 import CredentialsProvider from "next-auth/providers/credentials";
+import servicesConfig from "@/app/config/services";
 
 export const authConfig: NextAuthOptions ={
   providers: [
     GoogleProvider({
-        clientId: process.env.GOOGLE_ID as string,
-        clientSecret: process.env.GOOGLE_SECRET as string,
+        clientId: servicesConfig.googleId,
+        clientSecret: servicesConfig.googleSecret,
         authorization: {
           params: {
             prompt: "consent",

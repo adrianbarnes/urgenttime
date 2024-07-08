@@ -1,34 +1,15 @@
 import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
-
-
-// // Type definitions for your nodemailer configuration
-// interface NodemailerConfig {
-//     host: string;
-//     port: number;
-//     secure?: string;
-//     auth?: object;
-//   }
-  
-//   const nodemailerConfig: NodemailerConfig = {
-//     host: process.env.MAIL_HOST as string,
-//     port: parseInt(process.env.MAIL_PORT as string),
-//     // //secure: false,
-//     // auth: {
-
-//     //     user: process.env.MAIL_USERNAME,
-//     //     pass: process.env.MAIL_PASSWORD,
-//     // }
-//   };
+import appConfig from '@/app/config/app';
 
 const transporter = nodemailer.createTransport({
-    host: process.env.MAIL_HOST,
-    port: parseInt(process.env.MAIL_PORT as string),
+    host: appConfig.mailHost,
+    port: appConfig.mailPort,
     //secure: false,
     auth: {
 
-        user: process.env.MAIL_USERNAME,
-        pass: process.env.MAIL_PASSWORD,
+        user: appConfig.mailUsername,
+        pass: appConfig.mailPassword,
     }
 });
 
@@ -36,7 +17,7 @@ export async function sendMail(from: string | undefined, to: string, subject: st
     try {
         
         const mailOptions: Mail.Options = {
-            from: process.env.MAIL_FROM_ADDRESS,
+            from: appConfig.mailFromAddress,
             to: to,
             // cc: email, (uncomment this line if you want to send a copy to the sender)
             subject: subject,

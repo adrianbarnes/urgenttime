@@ -1,13 +1,13 @@
 'use server'
 
-import { FormState, LaunchCallFormSchema} from "../lib/definitions";
-import { sendMail } from "../lib/emailer";
+import { FormState, LaunchCallFormSchema} from "@/app/lib/definitions";
+import { sendMail } from "@/app/lib/emailer";
 import { render } from "@react-email/components";
-import InviteEmail from "../emails/invite";
-import { generateInviteLink, generateRandomString } from "../lib/utils";
+import InviteEmail from "@/app/emails/invite";
+import { generateInviteLink, generateRandomString } from "@/app/lib/utils";
 import Call from "@/models/call";
 import { CallStatus } from "@/enum/callStatus";
-import { getSession } from "./auth";
+import { getSession } from "@/app/actions/auth";
 
 export async function launchCall(state: FormState, formData: FormData) {
     // Validate form fields

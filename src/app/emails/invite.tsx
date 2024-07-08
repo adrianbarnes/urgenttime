@@ -1,5 +1,6 @@
 import { Tailwind,Html, Head, Body, Section, Button, Img } from '@react-email/components';
 import * as React from 'react';
+import appConfig from '@/app/config/app';
 
 type EmailProps = {
   inviteLink: string,
@@ -12,7 +13,7 @@ const InviteEmail = (props: EmailProps) => {
     userName = props.inviteLink,
   } = props
 
-  const brandImageUrl = process.env.APP_URL + "/logo.png";
+  const brandImageUrl = appConfig.appUrl + "/logo.png";
 
   return (
     <Tailwind

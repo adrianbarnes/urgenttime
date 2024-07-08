@@ -2,9 +2,10 @@ export { default } from "next-auth/middleware"
 
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
+import nextauthConfig from "@/app/config/nextauth";
 
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const token = await getToken({ req, secret: nextauthConfig.nextAuthSecret });
 
   const { pathname } = req.nextUrl;
 
