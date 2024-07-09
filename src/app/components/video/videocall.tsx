@@ -6,6 +6,7 @@ import { Channel } from 'pusher-js';
 import { useSession } from 'next-auth/react';
 import { User } from 'next-auth';
 import { useSearchParams } from 'next/navigation';
+import servicesConfig from '@/app/config/services';
 interface VideoCallProps {
     meetingId: string;
     handlePeerInstance: any;
@@ -74,7 +75,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, channel, handlePeerIns
     }
 
 
-  },[peerInstance, currentCall]);  
+  },[peerInstance]);  
 
 
   useEffect(() => {     
@@ -83,36 +84,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, channel, handlePeerIns
         if (typeof window !== 'undefined') {
           
             peer = new Peer(myUniqueId,{
-              config: {'iceServers': [
-                {
-                  urls: "stun:stun.relay.metered.ca:80",
-                },
-                {
-                  urls: "turn:global.relay.metered.ca:80",
-                  username: "84f5ac65de36e515412d9f0b",
-                  credential: "wovZTDn6KsXNeXOl",
-                },
-                {
-                  urls: "turn:global.relay.metered.ca:80?transport=tcp",
-                  username: "84f5ac65de36e515412d9f0b",
-                  credential: "wovZTDn6KsXNeXOl",
-                },
-                {
-                  urls: "turn:global.relay.metered.ca:443",
-                  username: "84f5ac65de36e515412d9f0b",
-                  credential: "wovZTDn6KsXNeXOl",
-                },
-                {
-                  urls: "turns:global.relay.metered.ca:443?transport=tcp",
-                  username: "84f5ac65de36e515412d9f0b",
-                  credential: "wovZTDn6KsXNeXOl",
-                },              
-                // { url: "stun:stun.l.google.com:19302" },
-                // { url: "stun:stun1.l.google.com:19302" },
-                // { url: "stun:stun2.l.google.com:19302" },
-                // { url: "stun:stun3.l.google.com:19302" },
-                // { url: "stun:stun4.l.google.com:19302" },
-              ]}
+              config: {'iceServers': servicesConfig.iceServers}
             });
 
             setPeerInstance(peer);
@@ -175,7 +147,7 @@ const VideoCall: React.FC<VideoCallProps> = ({ meetingId, channel, handlePeerIns
   
     }
   
-  }, [myUniqueId, meetingId]);
+  }, [myUniqueId]);
 
   return (
       <div className='relative w-full'>

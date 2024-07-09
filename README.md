@@ -46,6 +46,13 @@ PUSHER_SECRET=your_pusher_secret
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_nextauth_secret
 NEXT_PUBLIC_LOCAL_STORAGE_DATABASE_NAME=database_name
+NEXT_PUBLIC_ICE_SERVERS='[
+  {"urls": "stun:stun.l.google.com:19302"},
+  {"urls": "stun:stun1.l.google.com:19302"},
+  {"urls": "stun:stun2.l.google.com:19302"},
+  {"urls": "stun:stun3.l.google.com:19302"},
+  {"urls": "stun:stun4.l.google.com:19302"}
+]'
 
 ```
 Replace the variables with the actual values for your environment
@@ -73,6 +80,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 -  **NEXTAUTH_URL**: NextAuth app url.
 -  **NEXTAUTH_SECRET**: NextAuth secret. You can generate using https://generate-secret.vercel.app/32
 -  **NEXT_PUBLIC_LOCAL_STORAGE_DATABASE_NAME**: Database Name of local storage.
+-  **NEXT_PUBLIC_ICE_SERVERS**: Optional ICE servers to use to establish webrtc connections and signaling.
 
 ## Deployment
 To deploy your application, you can use platforms like Vercel, Heroku, or any other cloud service provider that supports Node.js applications.

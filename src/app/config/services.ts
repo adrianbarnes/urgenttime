@@ -5,6 +5,7 @@ const servicesConfig = {
     pusherCluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER as string,
     pusherAppId: process.env.PUSHER_APP_ID as string,
     pusherSecret: process.env.PUSHER_SECRET as string,
+    iceServers: process.env.NEXT_PUBLIC_ICE_SERVERS ? JSON.parse(process.env.NEXT_PUBLIC_ICE_SERVERS as string) : []
 };
 
 export default servicesConfig;
