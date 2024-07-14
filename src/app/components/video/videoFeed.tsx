@@ -215,16 +215,39 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ peerInstance, idToCall, triggerCa
   }, [legAVideoConstraints, idToCall, peerInstance]);
 
   return (
-    <div className="max-h-screen overflow-hidden">
-      <div className={receivedFeed ? 'md:w-32 w-16 absolute bottom-0 right-0 leg-a md:block' : 'w-full leg-a'}>
-        <video className='w-full rounded-l-lg rounded-r-lg md:rounded-r-none' playsInline ref={videoRef} autoPlay muted/>
+    <div className="relative w-full md:h-auto h-screen overflow-hidden">
+      <div
+        className={
+          receivedFeed
+            ? "md:w-32 w-16 absolute bottom-0 right-0 leg-a md:block"
+            : "w-full h-full md:h-auto leg-a"
+        }
+      >
+        <video
+          className="w-full h-full md:h-auto object-cover md:object-contain rounded-l-lg rounded-r-lg md:rounded-r-none"
+          playsInline
+          ref={videoRef}
+          autoPlay
+          muted
+        />
       </div>
 
-      <div className={receivedFeed ? 'w-full leg-b': 'hidden leg-b'}>
-        <video className='w-full rounded-l-lg rounded-r-lg md:rounded-r-none max-h-max' playsInline ref={callingVideoRef} autoPlay muted/>
-      </div>  
-      <VideoCtrl updateVideoConstraints={updateVideoConstraints}/>
-    </div>  
+      <div
+        className={
+          receivedFeed ? "w-full h-full md:h-auto leg-b" : "hidden leg-b"
+        }
+      >
+        <video
+          className="w-full h-full md:h-auto object-cover md:object-contain rounded-l-lg rounded-r-lg md:rounded-r-none"
+          playsInline
+          ref={callingVideoRef}
+          autoPlay
+          muted
+        />
+      </div>
+
+      <VideoCtrl updateVideoConstraints={updateVideoConstraints} />
+    </div>
   );
 };
 
