@@ -10,6 +10,7 @@ import {CallStatus, findEnumFromValue, formatEnumValue} from '@/enum/callStatus'
 import { toast } from 'react-toastify';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation'
 
 type ConnectionTabProps = {
     peerInstance: Peer | null,
@@ -23,6 +24,8 @@ type ConnectionTabProps = {
     const pendingCheck = '/pending-check.svg';
     const inProgressCheck = '/inprogress-check.svg';
     const completedCheck = '/completed-check.svg';
+
+    const router = useRouter()
 
     const [items, setItems] = useState([
       { id: formatEnumValue(CallStatus.LINK_SENT), src: completedCheck, alt: CallStatus.LINK_SENT, text: CallStatus.LINK_SENT },
@@ -91,10 +94,12 @@ type ConnectionTabProps = {
         }
 
         triggerCallDisconnect(CallStatus.CALL_TERMINATED);
+
+        router.push("/calls")
         
-        if (typeof window !== 'undefined') {
-          window.location.href = '/calls';
-        }
+        // if (typeof window !== 'undefined') {
+        //   window.location.href = '/calls';
+        // }
       }
     };
 
