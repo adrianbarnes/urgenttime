@@ -2,6 +2,7 @@
  
 import SubmitButton from '@/app/components/submit';
 import { SignupFormSchema } from '@/app/lib/definitions';
+import { DB } from '@/app/lib/dexieDB';
 import { signIn } from 'next-auth/react';
 
 import Image from "next/image";
@@ -51,6 +52,9 @@ export default function SignupPage() {
       
         return;
       } 
+
+      //Delete Local Storage
+      DB.deleteDatabase();
 
       await signIn("credentials", {
         email: email,
@@ -215,7 +219,7 @@ export default function SignupPage() {
                 <div className="flex items-center justify-center">
                   <button onClick={() => signIn("google")} className="md:w-3/5 w-full px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
                     <Image className="w-6 h-6"
-                      src="/google-logo.svg"
+                      src={`/google-logo.svg`}
                       loading="lazy" alt="google logo"
                       width={10}
                       height={31}

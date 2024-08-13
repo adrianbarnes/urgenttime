@@ -17,7 +17,7 @@ export default function Navbar() {
             <div className="flex items-center mr-auto">
 
               <a href={`${session ? "/calls" : "/"}`}>
-                <Image src="/logo.svg" alt="Urgenttime Logo"
+                <Image src={`/logo.svg`} alt="Urgenttime Logo"
                   className="h-8 mr-4"
                   width={163}
                   height={31}

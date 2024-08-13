@@ -4,7 +4,7 @@ import { signOut } from 'next-auth/react'
 import Image from "next/image";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { db } from '@/app/lib/dexieDB';
+import { DB } from '@/app/lib/dexieDB';
 
 const UserAvatar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +23,7 @@ const UserAvatar = () => {
  
 
   const handleLogout = async () => {
-    db.delete();
+    DB.deleteDatabase();
     await signOut({callbackUrl: '/auth'});
     
   };

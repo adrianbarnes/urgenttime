@@ -15,8 +15,16 @@ export class DB extends Dexie {
       });
     }
 
-    static deleteDatabase(): Promise<void> {
-      return Dexie.delete(dbName);
+    static async deleteDatabase(): Promise<void> {
+      try {
+        try {
+          await db.delete({ disableAutoOpen: false });
+          console.log("Database successfully deleted");
+        } catch (err) {
+          console.error("Could not delete database");
+          console.error(err);
+        }
+      } finally { };
     }    
   }
   export const db = new DB();

@@ -7,7 +7,7 @@ import SubmitButton from "@/app/components/submit";
 import { useEffect, useState } from "react";
 import { LoginFormSchema } from "../lib/definitions";
 import { toast } from "react-toastify";
-import { redirect } from "next/navigation";
+import { DB } from "@/app/lib/dexieDB";
 
 
 export default function LoginPage() {
@@ -38,6 +38,9 @@ export default function LoginPage() {
       }      
 
       const {email, password} = formData;
+      
+      //Delete Local Storage
+      DB.deleteDatabase();
 
       const result = await signIn('credentials', {
         email: email,
@@ -120,7 +123,7 @@ export default function LoginPage() {
                 <div className="flex items-center justify-center">
                   <button onClick={() => signIn("google")} className="w-full px-4 py-2 border flex gap-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
                     <Image className="w-6 h-6"
-                      src="/google-logo.svg"
+                      src={`/google-logo.svg`}
                       loading="lazy" alt="google logo"
                       width={10}
                       height={31}
