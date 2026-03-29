@@ -1,8 +1,8 @@
 import { pusherServer } from "@/app/lib/pusher/pusherServer";
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, context: { params: Promise<{ id: string }> }) {
   
-  const meetingId  = params.id;    
+  const { id: meetingId } = await context.params;
 
   if (!meetingId) {
     return new Response('Missing required parameter: meetingId', {
