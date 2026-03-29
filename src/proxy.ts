@@ -1,4 +1,4 @@
-export { default } from "next-auth/middleware"
+
 
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
@@ -17,7 +17,7 @@ export const config = {
   ],
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const token = await getToken({ req, secret: nextauthConfig.nextAuthSecret });
 
   const { pathname } = req.nextUrl;
