@@ -38,7 +38,7 @@ export async function launchCall(state: FormState, formData: FormData) {
 
     const inviteLink = generateInviteLink(meetLink);
 
-    const html = render(<InviteEmail userName={senderEmail} inviteLink={inviteLink}/>,
+    const html = await render(<InviteEmail userName={senderEmail} inviteLink={inviteLink}/>,
     {
         pretty: true,
     })
